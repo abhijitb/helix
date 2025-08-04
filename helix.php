@@ -9,4 +9,5 @@ Author: Your Name
 require_once __DIR__ . '/admin/init.php';
 require_once __DIR__ . '/admin/rest-routes.php';
 require_once __DIR__ . '/admin/disable-wp-admin.php';
+require_once __DIR__ . '/admin/menu-customization.php';
 require_once __DIR__ . '/enqueue.php';
