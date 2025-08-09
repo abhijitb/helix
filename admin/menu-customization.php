@@ -28,23 +28,7 @@ add_action(
 		// Remove all admin menu separators.
 		remove_all_admin_menu_separators();
 
-		// 2) Ensure the "WordPress Admin" return link is present on first load.
-		if ( ! get_option( 'helix_use_default_admin', false ) ) {
-			global $admin_page_hooks;
-			if ( ! isset( $admin_page_hooks['wordpress-admin'] ) ) {
-				add_menu_page(
-					'WordPress Admin',
-					'WordPress Admin',
-					'read',
-					'wordpress-admin',
-					'wordpress_admin_callback',
-					'dashicons-wordpress',
-					2
-				);
-			}
-		}
-
-		// 3) Add custom Helix menu items.
+		// 2) Add custom Helix menu items.
 		add_menu_page(
 			'Helix Posts',
 			'Posts',
@@ -69,11 +53,6 @@ add_action(
 );
 
 /**
- * Ensure the "WordPress Admin" return link is present when landing on Helix, even on the first load
- * after switching modes in the same request.
- */
-
-/**
  * Remove all admin menu separators.
  */
 function remove_all_admin_menu_separators() {
@@ -95,22 +74,31 @@ function remove_all_admin_menu_separators() {
 add_action(
 	'admin_menu',
 	function () {
-		// Only show the "WordPress Admin" link when in Helix mode.
-		$use_default_admin = get_option( 'helix_use_default_admin', false );
-		if ( $use_default_admin ) {
-			return;
-		}
+		global $pagenow;
 
-		// Add a menu item to go back to default WordPress admin.
-		add_menu_page(
-			'WordPress Admin',           // Page title.
-			'WordPress Admin',           // Menu title.
-			'read',                      // Capability.
-			'wordpress-admin',           // Menu slug.
-			'wordpress_admin_callback',  // Callback function.
-			'dashicons-wordpress',       // Icon.
-			2                           // Position (after main Helix menu).
-		);
+		// Check if we're going to the Helix page by looking at the sanitized request.
+		$page_requested    = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_URL );
+		$is_helix_request  = ( 'admin.php' === $pagenow && 'helix' === $page_requested );
+		$use_default_admin = get_option( 'helix_use_default_admin', false );
+
+		// Always show the WordPress Admin link when navigating to Helix, or when not in default admin mode.
+		if ( $is_helix_request || ! $use_default_admin ) {
+			// If this is a Helix request, ensure we're in Helix mode.
+			if ( $is_helix_request ) {
+				update_option( 'helix_use_default_admin', false );
+			}
+
+			// Add a menu item to go back to default WordPress admin.
+			add_menu_page(
+				'WordPress Admin',           // Page title.
+				'WordPress Admin',           // Menu title.
+				'read',                      // Capability.
+				'wordpress-admin',           // Menu slug.
+				'wordpress_admin_callback',  // Callback function.
+				'dashicons-wordpress',       // Icon.
+				2                           // Position (after main Helix menu).
+			);
+		}
 	},
 	1000
 );
