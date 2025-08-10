@@ -1,19 +1,31 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
-import TwoFA from './pages/TwoFA';
+import './pages/Dashboard.css';
 
+// Main App component for the dashboard page
 export default function App() {
+	return <Dashboard />;
+}
+
+// Posts page component
+function PostsApp() {
 	return (
-		<Router>
-			<Routes>
-				<Route path="/" element={ <Dashboard /> } />
-				<Route path="/settings" element={ <Settings /> } />
-				<Route path="/2fa" element={ <TwoFA /> } />
-			</Routes>
-		</Router>
+		<div className="helix-page">
+			<h1>Posts Management</h1>
+			<p>Posts management interface will be implemented here.</p>
+		</div>
+	);
+}
+
+// Users page component
+function UsersApp() {
+	return (
+		<div className="helix-page">
+			<h1>Users Management</h1>
+			<p>Users management interface will be implemented here.</p>
+		</div>
 	);
 }
 
@@ -37,13 +49,13 @@ document.addEventListener( 'DOMContentLoaded', function () {
 	const postsRoot = document.getElementById( 'helix-posts-root' );
 	if ( postsRoot ) {
 		const root = createRoot( postsRoot );
-		root.render( <Dashboard /> ); // For now, render Dashboard
+		root.render( <PostsApp /> );
 	}
 
 	// Users page
 	const usersRoot = document.getElementById( 'helix-users-root' );
 	if ( usersRoot ) {
 		const root = createRoot( usersRoot );
-		root.render( <Dashboard /> ); // For now, render Dashboard
+		root.render( <UsersApp /> );
 	}
 } );
