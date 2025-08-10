@@ -9,7 +9,19 @@
 add_action(
 	'current_screen',
 	function ( $current_screen ) {
-		if ( ! $current_screen || 'toplevel_page_helix' !== $current_screen->id ) {
+		if ( ! $current_screen ) {
+			return;
+		}
+
+		// Check if we're on any Helix admin page.
+		$helix_pages = array(
+			'toplevel_page_helix',
+			'toplevel_page_helix-posts',
+			'toplevel_page_helix-users',
+			'toplevel_page_helix-settings',
+		);
+
+		if ( ! in_array( $current_screen->id, $helix_pages, true ) ) {
 			return;
 		}
 
@@ -27,27 +39,6 @@ add_action(
 
 		// Remove all admin menu separators.
 		remove_all_admin_menu_separators();
-
-		// 2) Add custom Helix menu items.
-		add_menu_page(
-			'Helix Posts',
-			'Posts',
-			'edit_posts',
-			'helix-posts',
-			'helix_posts_callback',
-			'dashicons-admin-post',
-			3
-		);
-
-		add_menu_page(
-			'Helix Users',
-			'Users',
-			'list_users',
-			'helix-users',
-			'helix_users_callback',
-			'dashicons-admin-users',
-			4
-		);
 	},
 	10
 );
@@ -78,7 +69,7 @@ add_action(
 
 		// Check if we're going to the Helix page by looking at the sanitized request.
 		$page_requested    = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_URL );
-		$is_helix_request  = ( 'admin.php' === $pagenow && 'helix' === $page_requested );
+		$is_helix_request  = ( 'admin.php' === $pagenow && ( 'helix' === $page_requested || strpos( $page_requested, 'helix-' ) === 0 ) );
 		$use_default_admin = get_option( 'helix_use_default_admin', false );
 
 		// Always show the WordPress Admin link when navigating to Helix, or when not in default admin mode.
@@ -88,6 +79,37 @@ add_action(
 				update_option( 'helix_use_default_admin', false );
 			}
 
+			// Add Helix menu items.
+			add_menu_page(
+				'Helix Posts',
+				'Posts',
+				'edit_posts',
+				'helix-posts',
+				'helix_posts_callback',
+				'dashicons-admin-post',
+				3
+			);
+
+			add_menu_page(
+				'Helix Users',
+				'Users',
+				'list_users',
+				'helix-users',
+				'helix_users_callback',
+				'dashicons-admin-users',
+				4
+			);
+
+			add_menu_page(
+				'Helix Settings',
+				'Settings',
+				'manage_options',
+				'helix-settings',
+				'helix_settings_callback',
+				'dashicons-admin-settings',
+				5
+			);
+
 			// Add a menu item to go back to default WordPress admin.
 			add_menu_page(
 				'WordPress Admin',           // Page title.
@@ -96,7 +118,7 @@ add_action(
 				'wordpress-admin',           // Menu slug.
 				'wordpress_admin_callback',  // Callback function.
 				'dashicons-wordpress',       // Icon.
-				2                           // Position (after main Helix menu).
+				6                           // Position (after Settings menu).
 			);
 		}
 	},
@@ -141,4 +163,11 @@ function helix_posts_callback() {
  */
 function helix_users_callback() {
 	echo '<div id="helix-users-root"></div>';
+}
+
+/**
+ * Callback function for Settings menu item.
+ */
+function helix_settings_callback() {
+	echo '<div id="helix-settings-root"></div>';
 }

@@ -8,7 +8,15 @@
 add_action(
 	'admin_enqueue_scripts',
 	function ( $hook ) {
-		if ( 'toplevel_page_helix' !== $hook ) {
+		// Define Helix admin pages that need the React app.
+		$helix_pages = array(
+			'toplevel_page_helix',
+			'toplevel_page_helix-posts',
+			'toplevel_page_helix-users',
+			'toplevel_page_helix-settings',
+		);
+
+		if ( ! in_array( $hook, $helix_pages, true ) ) {
 			return;
 		}
 
@@ -19,6 +27,18 @@ add_action(
 			'0.1.0',
 			array()
 		);
+
+		// Enqueue the CSS file built by Vite.
+		$css_files = glob( plugin_dir_path( __FILE__ ) . 'build/assets/*.css' );
+		if ( ! empty( $css_files ) ) {
+			$css_file = basename( $css_files[0] );
+			wp_enqueue_style(
+				'helix-app-styles',
+				plugin_dir_url( __FILE__ ) . 'build/assets/' . $css_file,
+				array(),
+				'0.1.0'
+			);
+		}
 
 		// Get the original route that was redirected.
 		$original_route = filter_input( INPUT_GET, 'helix_route', FILTER_SANITIZE_URL );

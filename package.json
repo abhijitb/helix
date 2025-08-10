@@ -1,17 +1,23 @@
 {
-  "name": "helix-admin",
-  "version": "0.1.0",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build"
-  },
-  "dependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "react-router-dom": "^6.0.0"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.7.0",
-    "vite": "^5.0.0"
-  }
+	"name": "helix-admin",
+	"version": "0.1.0",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"lint:js": "wp-scripts lint-js",
+		"lint:js:fix": "wp-scripts lint-js --fix",
+		"format": "wp-scripts format",
+		"lint": "npm run lint:js",
+		"prebuild": "npm run lint && npm run format"
+	},
+	"dependencies": {
+		"react": "^18.0.0",
+		"react-dom": "^18.0.0",
+		"react-router-dom": "^6.0.0"
+	},
+	"devDependencies": {
+		"@vitejs/plugin-react": "^4.7.0",
+		"@wordpress/scripts": "^30.21.0",
+		"vite": "^5.0.0"
+	}
 }

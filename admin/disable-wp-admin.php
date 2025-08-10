@@ -127,8 +127,16 @@ add_action(
 			return;
 		}
 
-		// Check if we're already on the helix page or WordPress admin page.
-		if ( in_array( $current_screen->id, array( 'toplevel_page_helix', 'toplevel_page_wordpress-admin' ), true ) ) {
+		// Check if we're already on any Helix page or WordPress admin page.
+		$helix_pages = array(
+			'toplevel_page_helix',
+			'toplevel_page_helix-posts',
+			'toplevel_page_helix-users',
+			'toplevel_page_helix-settings',
+			'toplevel_page_wordpress-admin',
+		);
+
+		if ( in_array( $current_screen->id, $helix_pages, true ) ) {
 			return;
 		}
 
