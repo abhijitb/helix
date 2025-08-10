@@ -116,12 +116,9 @@ export default function Dashboard() {
 
 	if ( dashboardData.loading ) {
 		return (
-			<div className="helix-dashboard">
-				<div className="helix-dashboard__header">
-					<h1>Dashboard</h1>
-				</div>
+			<div className="helix-settings-page">
 				<div className="helix-loading">
-					<div className="helix-loading__spinner"></div>
+					<div className="helix-spinner"></div>
 					<p>Loading dashboard...</p>
 				</div>
 			</div>

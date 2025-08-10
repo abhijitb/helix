@@ -1,4 +1,11 @@
 import React from 'react';
+// Material-UI Icons
+import HomeIcon from '@mui/icons-material/Home';
+import ArticleIcon from '@mui/icons-material/Article';
+import EditIcon from '@mui/icons-material/Edit';
+import ImageIcon from '@mui/icons-material/Image';
+import PeopleIcon from '@mui/icons-material/People';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 /**
  * Settings tabs navigation component
@@ -12,32 +19,32 @@ const SettingsTabs = ( { activeTab, onTabChange, hasUnsavedChanges } ) => {
 		{
 			id: 'site',
 			label: 'Site Information',
-			icon: '🏠',
+			icon: HomeIcon,
 		},
 		{
 			id: 'content',
 			label: 'Content & Reading',
-			icon: '📖',
+			icon: ArticleIcon,
 		},
 		{
 			id: 'writing',
 			label: 'Writing & Publishing',
-			icon: '✍️',
+			icon: EditIcon,
 		},
 		{
 			id: 'media',
 			label: 'Media & Assets',
-			icon: '🖼️',
+			icon: ImageIcon,
 		},
 		{
 			id: 'users',
 			label: 'Users & Membership',
-			icon: '👥',
+			icon: PeopleIcon,
 		},
 		{
 			id: 'helix',
 			label: 'Helix Settings',
-			icon: '⚙️',
+			icon: SettingsIcon,
 		},
 	];
 
@@ -56,7 +63,9 @@ const SettingsTabs = ( { activeTab, onTabChange, hasUnsavedChanges } ) => {
 						}` }
 						onClick={ () => onTabChange( tab.id ) }
 					>
-						<span className="helix-tab-icon">{ tab.icon }</span>
+						<span className="helix-tab-icon">
+							<tab.icon />
+						</span>
 						<span className="helix-tab-label">{ tab.label }</span>
 						{ hasUnsavedChanges && (
 							<span
