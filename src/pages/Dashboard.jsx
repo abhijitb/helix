@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './Dashboard.css';
+// Material-UI Icons
+import ArticleIcon from '@mui/icons-material/Article';
+import DescriptionIcon from '@mui/icons-material/Description';
+import CommentIcon from '@mui/icons-material/Comment';
+import PeopleIcon from '@mui/icons-material/People';
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import CommentBankIcon from '@mui/icons-material/CommentBank';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 
 export default function Dashboard() {
 	const [ dashboardData, setDashboardData ] = useState( {
@@ -70,11 +80,27 @@ export default function Dashboard() {
 		fetchDashboardData();
 	}, [] );
 
-	const StatsCard = ( { title, count, icon, color } ) => (
+	const StatsCard = ( {
+		title,
+		count,
+		icon: IconComponent,
+		color,
+		trend,
+	} ) => (
 		<div className={ `helix-stats-card helix-stats-card--${ color }` }>
-			<div className="helix-stats-card__icon">{ icon }</div>
+			<div className="helix-stats-card__icon">
+				<IconComponent />
+			</div>
 			<div className="helix-stats-card__content">
-				<h3 className="helix-stats-card__count">{ count }</h3>
+				<div className="helix-stats-card__header">
+					<h3 className="helix-stats-card__count">{ count }</h3>
+					{ trend && (
+						<div className="helix-stats-card__trend">
+							<TrendingUpIcon className="helix-trend-icon" />
+							<span>{ trend }</span>
+						</div>
+					) }
+				</div>
 				<p className="helix-stats-card__title">{ title }</p>
 			</div>
 		</div>
@@ -114,26 +140,30 @@ export default function Dashboard() {
 				<StatsCard
 					title="Posts"
 					count={ dashboardData.postsCount }
-					icon="📝"
+					icon={ ArticleIcon }
 					color="blue"
+					trend="+12%"
 				/>
 				<StatsCard
 					title="Pages"
 					count={ dashboardData.pagesCount }
-					icon="📄"
+					icon={ DescriptionIcon }
 					color="green"
+					trend="+5%"
 				/>
 				<StatsCard
 					title="Comments"
 					count={ dashboardData.commentsCount }
-					icon="💬"
+					icon={ CommentIcon }
 					color="orange"
+					trend="+28%"
 				/>
 				<StatsCard
 					title="Users"
 					count={ dashboardData.usersCount }
-					icon="👥"
+					icon={ PeopleIcon }
 					color="purple"
+					trend="+3%"
 				/>
 			</div>
 
@@ -262,7 +292,7 @@ export default function Dashboard() {
 								className="helix-quick-action"
 							>
 								<span className="helix-quick-action__icon">
-									✏️
+									<EditIcon />
 								</span>
 								<span className="helix-quick-action__text">
 									Write a Post
@@ -273,7 +303,7 @@ export default function Dashboard() {
 								className="helix-quick-action"
 							>
 								<span className="helix-quick-action__icon">
-									📄
+									<AddIcon />
 								</span>
 								<span className="helix-quick-action__text">
 									Create a Page
@@ -284,7 +314,7 @@ export default function Dashboard() {
 								className="helix-quick-action"
 							>
 								<span className="helix-quick-action__icon">
-									📁
+									<CloudUploadIcon />
 								</span>
 								<span className="helix-quick-action__text">
 									Upload Media
@@ -295,7 +325,7 @@ export default function Dashboard() {
 								className="helix-quick-action"
 							>
 								<span className="helix-quick-action__icon">
-									💬
+									<CommentBankIcon />
 								</span>
 								<span className="helix-quick-action__text">
 									Moderate Comments

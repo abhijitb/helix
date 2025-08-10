@@ -2,18 +2,21 @@
 	padding: 2rem;
 	max-width: 1400px;
 	margin: 0 auto;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 .helix-page {
 	padding: 2rem;
 	max-width: 1400px;
 	margin: 0 auto;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 .helix-page h1 {
 	font-size: 2rem;
 	margin-bottom: 1rem;
-	color: #1e293b;
+	color: #0f172a;
+	font-weight: 700;
 }
 
 .helix-page p {
@@ -22,19 +25,45 @@
 }
 
 .helix-dashboard__header {
-	margin-bottom: 2rem;
+	margin-bottom: 3rem;
+	text-align: center;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	color: white;
+	padding: 3rem 2rem;
+	margin: -2rem -2rem 3rem -2rem;
+	border-radius: 0 0 24px 24px;
+	position: relative;
+	overflow: hidden;
+}
+
+.helix-dashboard__header::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+	opacity: 0.3;
 }
 
 .helix-dashboard__header h1 {
-	font-size: 2.5rem;
+	font-size: 3rem;
 	margin: 0 0 0.5rem 0;
-	color: #1e293b;
+	color: #ffffff;
+	font-weight: 800;
+	position: relative;
+	z-index: 1;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .helix-dashboard__header p {
-	font-size: 1.1rem;
-	color: #64748b;
+	font-size: 1.25rem;
+	color: rgba(255, 255, 255, 0.9);
 	margin: 0;
+	position: relative;
+	z-index: 1;
+	font-weight: 400;
 }
 
 .helix-loading {
@@ -73,45 +102,93 @@
 
 .helix-stats-card {
 	background: #ffffff;
-	border-radius: 0.5rem;
+	border-radius: 12px;
 	padding: 1.5rem;
-	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	gap: 1rem;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+	border: 1px solid rgba(226, 232, 240, 0.5);
 }
 
-.helix-stats-card--blue {
-	border-left: 4px solid #3b82f6;
+.helix-stats-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-.helix-stats-card--green {
-	border-left: 4px solid #10b981;
-}
-
-.helix-stats-card--orange {
-	border-left: 4px solid #f59e0b;
-}
-
+.helix-stats-card--blue,
+.helix-stats-card--green,
+.helix-stats-card--orange,
 .helix-stats-card--purple {
-	border-left: 4px solid #8b5cf6;
+	background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+	border-left: 4px solid #667eea;
+}
+
+.helix-stats-card--blue .helix-stats-card__icon svg,
+.helix-stats-card--green .helix-stats-card__icon svg,
+.helix-stats-card--orange .helix-stats-card__icon svg,
+.helix-stats-card--purple .helix-stats-card__icon svg {
+	color: #667eea;
 }
 
 .helix-stats-card__icon {
-	font-size: 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	border-radius: 10px;
+	background: rgba(255, 255, 255, 0.8);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.helix-stats-card__icon svg {
+	width: 24px;
+	height: 24px;
+}
+
+.helix-stats-card__content {
+	flex: 1;
+}
+
+.helix-stats-card__header {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	margin-bottom: 0.25rem;
 }
 
 .helix-stats-card__count {
 	font-size: 2rem;
-	font-weight: bold;
+	font-weight: 700;
 	margin: 0;
-	color: #1e293b;
+	color: #0f172a;
+	line-height: 1;
 }
 
 .helix-stats-card__title {
-	font-size: 0.9rem;
+	font-size: 0.875rem;
 	color: #64748b;
 	margin: 0;
+	font-weight: 500;
+}
+
+.helix-stats-card__trend {
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+	font-size: 0.75rem;
+	font-weight: 600;
+	color: #059669;
+	background: rgba(16, 185, 129, 0.1);
+	padding: 0.25rem 0.5rem;
+	border-radius: 6px;
+}
+
+.helix-trend-icon {
+	width: 12px !important;
+	height: 12px !important;
 }
 
 .helix-dashboard__content {
@@ -122,17 +199,24 @@
 
 .helix-widget {
 	background: #ffffff;
-	border-radius: 0.5rem;
-	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+	border-radius: 12px;
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 	overflow: hidden;
+	border: 1px solid rgba(226, 232, 240, 0.5);
+	transition: box-shadow 0.2s ease;
+}
+
+.helix-widget:hover {
+	box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .helix-widget__header {
-	padding: 1rem 1.5rem;
-	border-bottom: 1px solid #e2e8f0;
+	padding: 1.25rem 1.5rem;
+	border-bottom: 1px solid #f1f5f9;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	background: linear-gradient(135deg, #fefefe 0%, #f8fafc 100%);
 }
 
 .helix-widget__header h2 {
@@ -243,26 +327,58 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding: 1rem;
-	background: #f8fafc;
-	border-radius: 0.5rem;
+	padding: 1.25rem 1rem;
+	background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+	border-radius: 10px;
 	text-decoration: none;
 	color: #1e293b;
-	transition: background-color 0.2s;
+	transition: all 0.2s ease;
+	border: 1px solid rgba(226, 232, 240, 0.8);
+	position: relative;
+	overflow: hidden;
 }
 
 .helix-quick-action:hover {
-	background: #e2e8f0;
+	background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	color: #0f172a;
 }
 
 .helix-quick-action__icon {
-	font-size: 1.5rem;
-	margin-bottom: 0.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	background: #ffffff;
+	border-radius: 10px;
+	margin-bottom: 0.75rem;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	transition: all 0.2s ease;
+}
+
+.helix-quick-action:hover .helix-quick-action__icon {
+	background: #3b82f6;
+	transform: scale(1.1);
+}
+
+.helix-quick-action:hover .helix-quick-action__icon svg {
+	color: #ffffff;
+}
+
+.helix-quick-action__icon svg {
+	width: 20px;
+	height: 20px;
+	color: #64748b;
+	transition: color 0.2s ease;
 }
 
 .helix-quick-action__text {
-	font-size: 0.9rem;
-	font-weight: 500;
+	font-size: 0.875rem;
+	font-weight: 600;
+	text-align: center;
+	line-height: 1.2;
 }
 
 .helix-news-placeholder {
