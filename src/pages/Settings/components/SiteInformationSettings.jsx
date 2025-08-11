@@ -1,6 +1,6 @@
 import React from 'react';
 import SettingsSection from './SettingsSection';
-import TextInput from './TextInput';
+import TextInput from '../../../components/TextInput';
 
 /**
  * Site Information Settings Component

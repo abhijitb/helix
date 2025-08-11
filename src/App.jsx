@@ -1,8 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import Dashboard from './pages/Dashboard';
-import Settings from './pages/Settings';
-import './pages/Dashboard.css';
+import Dashboard from './pages/Dashboard/Dashboard';
+import Settings from './pages/Settings/Settings';
 
 // Main App component for the dashboard page
 export default function App() {

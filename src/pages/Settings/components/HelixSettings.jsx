@@ -1,6 +1,6 @@
 import React from 'react';
 import SettingsSection from './SettingsSection';
-import ToggleInput from './ToggleInput';
+import ToggleInput from '../../../components/ToggleInput';
 
 /**
  * Helix Specific Settings Component

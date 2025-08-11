@@ -1,7 +1,7 @@
 import React from 'react';
 import SettingsSection from './SettingsSection';
-import SelectInput from './SelectInput';
-import ToggleInput from './ToggleInput';
+import SelectInput from '../../../components/SelectInput';
+import ToggleInput from '../../../components/ToggleInput';
 
 /**
  * Users & Membership Settings Component

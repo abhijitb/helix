@@ -1,7 +1,7 @@
 import React from 'react';
 import SettingsSection from './SettingsSection';
-import NumberInput from './NumberInput';
-import ToggleInput from './ToggleInput';
+import NumberInput from '../../../components/NumberInput';
+import ToggleInput from '../../../components/ToggleInput';
 
 /**
  * Media & Assets Settings Component

@@ -1,9 +1,9 @@
 import React from 'react';
 import SettingsSection from './SettingsSection';
-import SelectInput from './SelectInput';
-import NumberInput from './NumberInput';
-import ToggleInput from './ToggleInput';
-import TextInput from './TextInput';
+import SelectInput from '../../../components/SelectInput';
+import NumberInput from '../../../components/NumberInput';
+import ToggleInput from '../../../components/ToggleInput';
+import TextInput from '../../../components/TextInput';
 
 /**
  * Content & Reading Settings Component

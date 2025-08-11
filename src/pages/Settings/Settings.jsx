@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { useSettings } from './Settings/hooks/useSettings';
-import SettingsTabs from './Settings/components/SettingsTabs';
-import SaveButton from './Settings/components/SaveButton';
-import Notification from './Settings/components/Notification';
-import SiteInformationSettings from './Settings/components/SiteInformationSettings';
-import ContentReadingSettings from './Settings/components/ContentReadingSettings';
-import WritingPublishingSettings from './Settings/components/WritingPublishingSettings';
-import MediaAssetsSettings from './Settings/components/MediaAssetsSettings';
-import UsersMembershipSettings from './Settings/components/UsersMembershipSettings';
-import HelixSettings from './Settings/components/HelixSettings';
-import './Settings/styles.css';
+import { useSettings } from './hooks/useSettings';
+import SettingsTabs from './components/SettingsTabs';
+import SaveButton from '../../components/SaveButton';
+import Notification from '../../components/Notification';
+import SiteInformationSettings from './components/SiteInformationSettings';
+import ContentReadingSettings from './components/ContentReadingSettings';
+import WritingPublishingSettings from './components/WritingPublishingSettings';
+import MediaAssetsSettings from './components/MediaAssetsSettings';
+import UsersMembershipSettings from './components/UsersMembershipSettings';
+import HelixSettings from './components/HelixSettings';
+import './settings.css';
 
 /**
  * Main Settings Page Component

@@ -1,8 +1,8 @@
 import React from 'react';
 import SettingsSection from './SettingsSection';
-import SelectInput from './SelectInput';
-import NumberInput from './NumberInput';
-import ToggleInput from './ToggleInput';
+import SelectInput from '../../../components/SelectInput';
+import NumberInput from '../../../components/NumberInput';
+import ToggleInput from '../../../components/ToggleInput';
 
 /**
  * Writing & Publishing Settings Component
