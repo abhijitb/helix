@@ -10,11 +10,10 @@
 /* Header */
 .helix-settings-header {
   margin-bottom: 3rem;
-  text-align: center;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   padding: 3rem 2rem;
-  margin: -2rem -2rem 3rem -2rem;
+  margin: -2rem 0 3rem -2rem;
   border-radius: 0 0 24px 24px;
   position: relative;
   overflow: hidden;
@@ -48,6 +47,7 @@
   position: relative;
   z-index: 1;
   font-weight: 400;
+  line-height: 3;
 }
 
 /* Loading State */
