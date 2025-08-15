@@ -29,6 +29,16 @@ export default function Settings() {
 	const [ activeTab, setActiveTab ] = useState( 'site' );
 	const [ notification, setNotification ] = useState( null );
 
+	/**
+	 * Smoothly scroll to the top of the page
+	 */
+	const scrollToTop = () => {
+		window.scrollTo( {
+			top: 0,
+			behavior: 'smooth',
+		} );
+	};
+
 	const handleSave = async () => {
 		const result = await saveSettings();
 
@@ -45,6 +55,9 @@ export default function Settings() {
 					'Failed to save settings. Please try again.',
 			} );
 		}
+
+		// Scroll to top to show the notification
+		scrollToTop();
 	};
 
 	const handleReset = () => {
@@ -53,6 +66,9 @@ export default function Settings() {
 			type: 'info',
 			message: 'Changes have been reset to their original values.',
 		} );
+
+		// Scroll to top to show the notification
+		scrollToTop();
 	};
 
 	const handleTabChange = ( tabId ) => {
