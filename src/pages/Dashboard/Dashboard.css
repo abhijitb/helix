@@ -1,3 +1,17 @@
+:root {
+	/* Helix Color Palette */
+	--helix-color-1: #f1f4fe; /* lightest */
+	--helix-color-2: #e4e6ed;
+	--helix-color-3: #c8cad3;
+	--helix-color-4: #a9adb9;
+	--helix-color-5: #9094a3;
+	--helix-color-6: #7f8496;
+	--helix-color-7: #777c91;
+	--helix-color-8: #63687c;
+	--helix-color-9: #595e72;
+	--helix-color-10: #4a5167; /* darkest */
+}
+
 .helix-dashboard {
 	padding: 2rem;
 	max-width: 1400px;
@@ -15,18 +29,18 @@
 .helix-page h1 {
 	font-size: 2rem;
 	margin-bottom: 1rem;
-	color: #0f172a;
+	color: var(--helix-color-10);
 	font-weight: 700;
 }
 
 .helix-page p {
-	color: #64748b;
+	color: var(--helix-color-6);
 	margin-bottom: 2rem;
 }
 
 .helix-dashboard__header {
 	margin-bottom: 3rem;
-	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	background: linear-gradient(135deg, var(--helix-color-8) 0%, var(--helix-color-10) 100%);
 	color: white;
 	padding: 3rem 2rem;
 	margin: -2rem 0 3rem -2rem;
@@ -77,8 +91,8 @@
 .helix-loading__spinner {
 	width: 40px;
 	height: 40px;
-	border: 4px solid #f3f4f6;
-	border-top: 4px solid #3b82f6;
+	border: 4px solid var(--helix-color-2);
+	border-top: 4px solid var(--helix-color-7);
 	border-radius: 50%;
 	animation: spin 1s linear infinite;
 	margin-bottom: 1rem;
@@ -101,7 +115,7 @@
 }
 
 .helix-stats-card {
-	background: #ffffff;
+	background: var(--helix-color-1);
 	border-radius: 12px;
 	padding: 1.5rem;
 	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -109,27 +123,12 @@
 	align-items: flex-start;
 	gap: 1rem;
 	transition: transform 0.2s ease, box-shadow 0.2s ease;
-	border: 1px solid rgba(226, 232, 240, 0.5);
+	border: 1px solid var(--helix-color-3);
 }
 
 .helix-stats-card:hover {
 	transform: translateY(-2px);
 	box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.helix-stats-card--blue,
-.helix-stats-card--green,
-.helix-stats-card--orange,
-.helix-stats-card--purple {
-	background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
-	border-left: 4px solid #667eea;
-}
-
-.helix-stats-card--blue .helix-stats-card__icon svg,
-.helix-stats-card--green .helix-stats-card__icon svg,
-.helix-stats-card--orange .helix-stats-card__icon svg,
-.helix-stats-card--purple .helix-stats-card__icon svg {
-	color: #667eea;
 }
 
 .helix-stats-card__icon {
@@ -163,13 +162,13 @@
 	font-size: 2rem;
 	font-weight: 700;
 	margin: 0;
-	color: #0f172a;
+	color: var(--helix-color-10);
 	line-height: 1;
 }
 
 .helix-stats-card__title {
 	font-size: 0.875rem;
-	color: #64748b;
+	color: var(--helix-color-6);
 	margin: 0;
 	font-weight: 500;
 }
@@ -198,11 +197,11 @@
 }
 
 .helix-widget {
-	background: #ffffff;
+	background: var(--helix-color-1);
 	border-radius: 12px;
 	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 	overflow: hidden;
-	border: 1px solid rgba(226, 232, 240, 0.5);
+	border: 1px solid var(--helix-color-3);
 	transition: box-shadow 0.2s ease;
 }
 
@@ -212,22 +211,22 @@
 
 .helix-widget__header {
 	padding: 1.25rem 1.5rem;
-	border-bottom: 1px solid #f1f5f9;
+	border-bottom: 1px solid var(--helix-color-2);
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	background: linear-gradient(135deg, #fefefe 0%, #f8fafc 100%);
+	background: linear-gradient(135deg, var(--helix-color-1) 0%, var(--helix-color-2) 100%);
 }
 
 .helix-widget__header h2 {
 	margin: 0;
 	font-size: 1.25rem;
-	color: #1e293b;
+	color: var(--helix-color-9);
 	flex-grow: 1;
 }
 
 .helix-widget__link {
-	color: #3b82f6;
+	color: var(--helix-color-8);
 	text-decoration: none;
 	font-size: 0.9rem;
 }
@@ -241,7 +240,7 @@
 }
 
 .helix-widget__empty {
-	color: #64748b;
+	color: var(--helix-color-6);
 	font-style: italic;
 }
 
@@ -258,7 +257,7 @@
 	justify-content: space-between;
 	align-items: flex-start;
 	padding: 1rem 0;
-	border-bottom: 1px solid #f1f5f9;
+	border-bottom: 1px solid var(--helix-color-2);
 }
 
 .helix-posts-list__item:last-child,
@@ -268,24 +267,24 @@
 
 .helix-posts-list__title a,
 .helix-comments-list__author {
-	color: #1e293b;
+	color: var(--helix-color-9);
 	text-decoration: none;
 	font-weight: 500;
 }
 
 .helix-posts-list__title a:hover {
-	color: #3b82f6;
+	color: var(--helix-color-8);
 }
 
 .helix-posts-list__date,
 .helix-comments-list__date {
-	color: #64748b;
+	color: var(--helix-color-6);
 	font-size: 0.9rem;
 	margin: 0.25rem 0 0 0;
 }
 
 .helix-comments-list__excerpt {
-	color: #64748b;
+	color: var(--helix-color-6);
 	margin: 0.25rem 0;
 	font-size: 0.9rem;
 }
@@ -328,21 +327,21 @@
 	flex-direction: column;
 	align-items: center;
 	padding: 1.25rem 1rem;
-	background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+	background: linear-gradient(135deg, var(--helix-color-1) 0%, var(--helix-color-2) 100%);
 	border-radius: 10px;
 	text-decoration: none;
-	color: #1e293b;
+	color: var(--helix-color-9);
 	transition: all 0.2s ease;
-	border: 1px solid rgba(226, 232, 240, 0.8);
+	border: 1px solid var(--helix-color-3);
 	position: relative;
 	overflow: hidden;
 }
 
 .helix-quick-action:hover {
-	background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+	background: linear-gradient(135deg, var(--helix-color-3) 0%, var(--helix-color-4) 100%);
 	transform: translateY(-2px);
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-	color: #0f172a;
+	color: var(--helix-color-10);
 }
 
 .helix-quick-action__icon {
@@ -351,7 +350,7 @@
 	justify-content: center;
 	width: 48px;
 	height: 48px;
-	background: #ffffff;
+	background: var(--helix-color-1);
 	border-radius: 10px;
 	margin-bottom: 0.75rem;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -359,7 +358,7 @@
 }
 
 .helix-quick-action:hover .helix-quick-action__icon {
-	background: #3b82f6;
+	background: var(--helix-color-8);
 	transform: scale(1.1);
 }
 
@@ -370,7 +369,7 @@
 .helix-quick-action__icon svg {
 	width: 20px;
 	height: 20px;
-	color: #64748b;
+	color: var(--helix-color-6);
 	transition: color 0.2s ease;
 }
 
@@ -382,12 +381,12 @@
 }
 
 .helix-news-placeholder {
-	color: #64748b;
+	color: var(--helix-color-6);
 }
 
 .helix-news-item h4 {
 	margin: 0 0 0.5rem 0;
-	color: #1e293b;
+	color: var(--helix-color-9);
 }
 
 .helix-news-item p {
@@ -396,7 +395,7 @@
 }
 
 .helix-news-item a {
-	color: #3b82f6;
+	color: var(--helix-color-8);
 	text-decoration: none;
 	font-size: 0.9rem;
 }

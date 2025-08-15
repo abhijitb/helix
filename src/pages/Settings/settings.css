@@ -1,5 +1,19 @@
 /* Helix Settings Page Styles */
 
+:root {
+	/* Helix Color Palette */
+	--helix-color-1: #f1f4fe; /* lightest */
+	--helix-color-2: #e4e6ed;
+	--helix-color-3: #c8cad3;
+	--helix-color-4: #a9adb9;
+	--helix-color-5: #9094a3;
+	--helix-color-6: #7f8496;
+	--helix-color-7: #777c91;
+	--helix-color-8: #63687c;
+	--helix-color-9: #595e72;
+	--helix-color-10: #4a5167; /* darkest */
+}
+
 .helix-settings-page {
   max-width: 1400px;
   margin: 0 auto;
@@ -10,7 +24,7 @@
 /* Header */
 .helix-settings-header {
   margin-bottom: 3rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--helix-color-8) 0%, var(--helix-color-10) 100%);
   color: white;
   padding: 3rem 2rem;
   margin: -2rem 0 3rem -2rem;
@@ -63,7 +77,7 @@
 .helix-loading p {
   margin: 20px 0 0 0;
   font-size: 1.1rem;
-  color: #6b7280;
+  color: var(--helix-color-6);
 }
 
 /* Spinner */
@@ -123,9 +137,9 @@
 }
 
 .helix-btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--helix-color-8) 0%, var(--helix-color-10) 100%);
   color: white;
-  border-color: #667eea;
+  border-color: var(--helix-color-8);
   box-shadow: 0 4px 6px -1px rgba(102, 126, 234, 0.2);
 }
 
@@ -138,7 +152,7 @@
 
 .helix-btn-secondary {
   background-color: white;
-  color: #374151;
+  color: var(--helix-color-9);
   border-color: #d1d5db;
 }
 
@@ -174,7 +188,7 @@
   padding: 12px 20px;
   font-size: 14px;
   font-weight: 500;
-  color: #6b7280;
+  color: var(--helix-color-6);
   background: none;
   border: none;
   border-bottom: 3px solid transparent;
@@ -185,13 +199,13 @@
 }
 
 .helix-tab:hover {
-  color: #667eea;
-  background-color: #f8fafc;
+  color: var(--helix-color-8);
+  background-color: var(--helix-color-1);
 }
 
 .helix-tab.active {
-  color: #667eea;
-  border-bottom-color: #667eea;
+  color: var(--helix-color-8);
+  border-bottom-color: var(--helix-color-8);
 }
 
 .helix-tab-icon {
@@ -226,7 +240,7 @@
 
 /* Settings Sections */
 .helix-settings-section {
-  background: white;
+  background: var(--helix-color-1);
   border-radius: 12px;
   border: 1px solid rgba(226, 232, 240, 0.5);
   overflow: hidden;
@@ -241,7 +255,7 @@
 }
 
 .helix-settings-section-header {
-  background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+  background: linear-gradient(135deg, var(--helix-color-1) 0%, var(--helix-color-2) 100%);
   padding: 24px;
   border-bottom: 1px solid rgba(102, 126, 234, 0.1);
 }
@@ -249,12 +263,12 @@
 .helix-settings-section-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--helix-color-10);
   margin: 0 0 8px 0;
 }
 
 .helix-settings-section-description {
-  color: #6b7280;
+  color: var(--helix-color-6);
   margin: 0;
   font-size: 14px;
 }
@@ -277,7 +291,7 @@
 .helix-settings-subsection h4 {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--helix-color-9);
   margin: 0 0 20px 0;
 }
 
@@ -290,7 +304,7 @@
 
 .helix-form-label {
   font-weight: 500;
-  color: #374151;
+  color: var(--helix-color-9);
   font-size: 14px;
 }
 
@@ -306,7 +320,7 @@
 
 .helix-form-description {
   font-size: 13px;
-  color: #6b7280;
+  color: var(--helix-color-6);
   margin: 0;
   line-height: 1.4;
 }
@@ -322,18 +336,18 @@
 .helix-number-input,
 .helix-select-input {
   padding: 10px 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--helix-color-3);
   border-radius: 6px;
   font-size: 14px;
   transition: border-color 0.2s ease;
-  background: white;
+  background: var(--helix-color-1);
 }
 
 .helix-text-input:focus,
 .helix-number-input:focus,
 .helix-select-input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: var(--helix-color-8);
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
@@ -358,7 +372,7 @@
   width: 48px;
   height: 24px;
   appearance: none;
-  background: #d1d5db;
+  background: var(--helix-color-3);
   border-radius: 12px;
   outline: none;
   cursor: pointer;
@@ -366,7 +380,7 @@
 }
 
 .helix-toggle-input:checked {
-  background: #667eea;
+  background: var(--helix-color-8);
 }
 
 .helix-toggle-input::before {
@@ -376,7 +390,7 @@
   left: 2px;
   width: 20px;
   height: 20px;
-  background: white;
+  background: var(--helix-color-1);
   border-radius: 50%;
   transition: transform 0.2s ease;
 }
@@ -387,14 +401,14 @@
 
 .helix-toggle-label {
   font-weight: 500;
-  color: #374151;
+  color: var(--helix-color-9);
   font-size: 14px;
 }
 
 /* Notifications */
 .helix-notification {
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: var(--helix-color-1);
+  border: 1px solid var(--helix-color-3);
   border-radius: 8px;
   padding: 16px;
   margin: 20px 0;
@@ -443,14 +457,14 @@
 .helix-notification-message {
   flex: 1;
   font-size: 14px;
-  color: #374151;
+  color: var(--helix-color-9);
 }
 
 .helix-notification-close {
   background: none;
   border: none;
   font-size: 20px;
-  color: #6b7280;
+  color: var(--helix-color-6);
   cursor: pointer;
   padding: 0;
   line-height: 1;
@@ -458,7 +472,7 @@
 }
 
 .helix-notification-close:hover {
-  color: #374151;
+  color: var(--helix-color-9);
 }
 
 /* Responsive Design */
@@ -485,7 +499,7 @@
   .helix-tab.active {
     border-bottom-color: #e5e7eb;
     border-left: 3px solid #667eea;
-    background-color: #f8fafc;
+    background-color: var(--helix-color-1);
   }
 
   .helix-settings-section-content,
