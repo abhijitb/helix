@@ -1,15 +1,25 @@
 :root {
-	/* Helix Color Palette */
-	--helix-color-1: #f1f4fe; /* lightest */
-	--helix-color-2: #e4e6ed;
-	--helix-color-3: #c8cad3;
-	--helix-color-4: #a9adb9;
-	--helix-color-5: #9094a3;
-	--helix-color-6: #7f8496;
-	--helix-color-7: #777c91;
-	--helix-color-8: #63687c;
-	--helix-color-9: #595e72;
-	--helix-color-10: #4a5167; /* darkest */
+  /* Warm Professional Gray Base Palette */
+  --helix-color-1: #fafaf9; /* lightest */
+  --helix-color-2: #f5f5f4; 
+  --helix-color-3: #e7e5e4; 
+  --helix-color-4: #d6d3d1; 
+  --helix-color-5: #a8a29e; 
+  --helix-color-6: #78716c; 
+  --helix-color-7: #57534e; 
+  --helix-color-8: #44403c; 
+  --helix-color-9: #292524; 
+  --helix-color-10: #1c1917; /* darkest */
+  
+  /* Accent Colors */
+  --helix-success: #059669; /* darker green for warm palette */
+  --helix-success-light: #d1fae5; 
+  --helix-error: #dc2626; /* slightly darker red */
+  --helix-error-light: #fee2e2; 
+  --helix-warning: #d97706; /* warmer orange */
+  --helix-warning-light: #fed7aa; 
+  --helix-primary: #2563eb; /* rich blue for primary actions */
+  --helix-primary-light: #dbeafe; 
 }
 
 .helix-dashboard {
@@ -179,8 +189,8 @@
 	gap: 0.25rem;
 	font-size: 0.75rem;
 	font-weight: 600;
-	color: #059669;
-	background: rgba(16, 185, 129, 0.1);
+	color: var(--helix-success);
+	background: var(--helix-success-light);
 	padding: 0.25rem 0.5rem;
 	border-radius: 6px;
 }
@@ -297,23 +307,23 @@
 }
 
 .helix-status--publish {
-	background: #dcfce7;
-	color: #166534;
+	background: var(--helix-success-light);
+	color: var(--helix-success);
 }
 
 .helix-status--draft {
-	background: #fef3c7;
-	color: #92400e;
+	background: var(--helix-warning-light);
+	color: var(--helix-warning);
 }
 
 .helix-status--approved {
-	background: #dcfce7;
-	color: #166534;
+	background: var(--helix-success-light);
+	color: var(--helix-success);
 }
 
 .helix-status--pending {
-	background: #fef3c7;
-	color: #92400e;
+	background: var(--helix-warning-light);
+	color: var(--helix-warning);
 }
 
 .helix-quick-actions {
