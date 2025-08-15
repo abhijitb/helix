@@ -364,45 +364,83 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  cursor: pointer;
-}
-
-.helix-toggle-input {
-  position: relative;
-  width: 48px;
-  height: 24px;
-  appearance: none;
-  background: var(--helix-color-3);
-  border-radius: 12px;
-  outline: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.helix-toggle-input:checked {
-  background: var(--helix-color-8);
-}
-
-.helix-toggle-input::before {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 20px;
-  height: 20px;
-  background: var(--helix-color-1);
-  border-radius: 50%;
-  transition: transform 0.2s ease;
-}
-
-.helix-toggle-input:checked::before {
-  transform: translateX(24px);
 }
 
 .helix-toggle-label {
   font-weight: 500;
   color: var(--helix-color-9);
   font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.helix-toggle-label-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Toggle Switch Button */
+.helix-toggle-switch {
+  position: relative;
+  width: 48px;
+  height: 24px;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  flex-shrink: 0;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
+.helix-toggle-switch:focus {
+  box-shadow: 0 0 0 3px var(--helix-color-3);
+  outline: none;
+}
+
+/* Switch States */
+.helix-toggle-switch-off {
+  background-color: var(--helix-color-3);
+}
+
+.helix-toggle-switch-off:hover:not(:disabled) {
+  background-color: var(--helix-color-4);
+}
+
+.helix-toggle-switch-on {
+  background-color: var(--helix-color-8);
+}
+
+.helix-toggle-switch-on:hover:not(:disabled) {
+  background-color: var(--helix-color-9);
+}
+
+.helix-toggle-switch-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Toggle Knob */
+.helix-toggle-knob {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out;
+  transform: translateX(2px);
+}
+
+.helix-toggle-knob-on {
+  transform: translateX(26px);
+}
+
+.helix-toggle-knob-off {
+  transform: translateX(2px);
 }
 
 /* Notifications */

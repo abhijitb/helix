@@ -2,7 +2,7 @@ import React from 'react';
 import FormField from './FormField';
 
 /**
- * Toggle/Checkbox input component
+ * Toggle switch component with proper accessibility
  * @param root0
  * @param root0.label
  * @param root0.description
@@ -12,6 +12,7 @@ import FormField from './FormField';
  * @param root0.disabled
  * @param root0.error
  * @param root0.className
+ * @param root0.id
  */
 const ToggleInput = ( {
 	label,
@@ -22,10 +23,14 @@ const ToggleInput = ( {
 	disabled = false,
 	error = null,
 	className = '',
+	id = `toggle-${ Math.random().toString( 36 ).substr( 2, 9 ) }`,
 	...props
 } ) => {
-	const handleChange = ( event ) => {
-		onChange( event.target.checked );
+	const handleToggle = () => {
+		if ( disabled ) {
+			return;
+		}
+		onChange( ! value );
 	};
 
 	return (
@@ -35,19 +40,41 @@ const ToggleInput = ( {
 			required={ required }
 			className={ `helix-toggle-field ${ className }` }
 		>
-			<label className="helix-toggle-wrapper">
-				<input
-					type="checkbox"
-					checked={ !! value }
-					onChange={ handleChange }
-					required={ required }
+			<div className="helix-toggle-wrapper">
+				{ label && (
+					<label
+						htmlFor={ id }
+						className={ `helix-toggle-label ${
+							disabled ? 'helix-toggle-label-disabled' : ''
+						}` }
+					>
+						{ label }
+					</label>
+				) }
+
+				<button
+					id={ id }
+					type="button"
+					role="switch"
+					aria-checked={ !! value }
+					onClick={ handleToggle }
 					disabled={ disabled }
-					className="helix-toggle-input"
+					className={ `helix-toggle-switch ${
+						value
+							? 'helix-toggle-switch-on'
+							: 'helix-toggle-switch-off'
+					} ${ disabled ? 'helix-toggle-switch-disabled' : '' }` }
 					{ ...props }
-				/>
-				<span className="helix-toggle-slider"></span>
-				<span className="helix-toggle-label">{ label }</span>
-			</label>
+				>
+					<span
+						className={ `helix-toggle-knob ${
+							value
+								? 'helix-toggle-knob-on'
+								: 'helix-toggle-knob-off'
+						}` }
+					/>
+				</button>
+			</div>
 		</FormField>
 	);
 };
