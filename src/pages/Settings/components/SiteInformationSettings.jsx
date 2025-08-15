@@ -1,6 +1,7 @@
 import React from 'react';
 import SettingsSection from './SettingsSection';
 import TextInput from '../../../components/TextInput';
+import SelectInput from '../../../components/SelectInput';
 
 /**
  * Site Information Settings Component
@@ -64,20 +65,26 @@ const SiteInformationSettings = ( { settings, updateSetting } ) => {
 					required
 				/>
 
-				<TextInput
+				<SelectInput
 					label="Site Language"
 					description="The language for your site interface."
-					value={ settings.language }
+					value={
+						settings.language?.value || settings.language || ''
+					}
 					onChange={ ( value ) => updateSetting( 'language', value ) }
-					placeholder="en_US"
+					options={ settings.language?.options || [] }
+					placeholder="Select a language..."
 				/>
 
-				<TextInput
+				<SelectInput
 					label="Timezone"
 					description="Choose either a city in the same timezone as you or a UTC timezone offset."
-					value={ settings.timezone }
+					value={
+						settings.timezone?.value || settings.timezone || ''
+					}
 					onChange={ ( value ) => updateSetting( 'timezone', value ) }
-					placeholder="UTC"
+					options={ settings.timezone?.options || [] }
+					placeholder="Select a timezone..."
 				/>
 			</div>
 		</SettingsSection>

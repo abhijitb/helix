@@ -277,6 +277,166 @@ function helix_sanitize_setting_value( $setting, $value ) {
  * @since 1.0.0
  * @return array Settings configuration array.
  */
+/**
+ * Get available WordPress languages.
+ *
+ * @since 1.0.0
+ * @return array Array of available languages.
+ */
+function helix_get_available_languages() {
+	$language_options = array();
+	
+	// Add English (United States) as default
+	$language_options[] = array(
+		'value' => '',
+		'label' => 'English (United States)'
+	);
+	
+	// Try to get installed languages
+	if ( function_exists( 'get_available_languages' ) || ( file_exists( ABSPATH . 'wp-admin/includes/translation-install.php' ) && require_once ABSPATH . 'wp-admin/includes/translation-install.php' ) ) {
+		
+		$languages = get_available_languages();
+		
+		if ( ! empty( $languages ) && function_exists( 'wp_get_available_translations' ) ) {
+			$available_translations = wp_get_available_translations();
+			
+			foreach ( $languages as $language ) {
+				$language_data = $available_translations[ $language ] ?? null;
+				if ( $language_data && isset( $language_data['native_name'] ) ) {
+					$language_options[] = array(
+						'value' => $language,
+						'label' => $language_data['native_name']
+					);
+				} else {
+					// Fallback if translation data is not available
+					$language_options[] = array(
+						'value' => $language,
+						'label' => $language
+					);
+				}
+			}
+		}
+	}
+	
+	// If no languages found, add some common ones as fallback
+	if ( count( $language_options ) === 1 ) {
+		$common_languages = array(
+			'es_ES' => 'Español',
+			'fr_FR' => 'Français',
+			'de_DE' => 'Deutsch', 
+			'it_IT' => 'Italiano',
+			'pt_BR' => 'Português do Brasil',
+			'ru_RU' => 'Русский',
+			'ja' => '日本語',
+			'zh_CN' => '简体中文',
+		);
+		
+		foreach ( $common_languages as $code => $name ) {
+			$language_options[] = array(
+				'value' => $code,
+				'label' => $name
+			);
+		}
+	}
+	
+	return $language_options;
+}
+
+/**
+ * Get available WordPress timezones.
+ *
+ * @since 1.0.0
+ * @return array Array of available timezones.
+ */
+function helix_get_available_timezones() {
+	$timezone_options = array();
+	
+	// UTC and common UTC offsets
+	$timezone_options[] = array( 'value' => 'UTC', 'label' => 'UTC' );
+	
+	// Positive UTC offsets
+	for ( $i = 1; $i <= 12; $i++ ) {
+		$offset = sprintf( '+%d', $i );
+		$timezone_options[] = array( 'value' => "UTC{$offset}", 'label' => "UTC{$offset}" );
+	}
+	
+	// Negative UTC offsets
+	for ( $i = 1; $i <= 12; $i++ ) {
+		$offset = sprintf( '-%d', $i );
+		$timezone_options[] = array( 'value' => "UTC{$offset}", 'label' => "UTC{$offset}" );
+	}
+	
+	// Major city-based timezones organized by region
+	$timezone_regions = array(
+		'America' => array(
+			'America/New_York' => 'New York',
+			'America/Chicago' => 'Chicago', 
+			'America/Denver' => 'Denver',
+			'America/Los_Angeles' => 'Los Angeles',
+			'America/Toronto' => 'Toronto',
+			'America/Vancouver' => 'Vancouver',
+			'America/Montreal' => 'Montreal',
+			'America/Mexico_City' => 'Mexico City',
+			'America/Sao_Paulo' => 'São Paulo',
+			'America/Buenos_Aires' => 'Buenos Aires',
+		),
+		'Europe' => array(
+			'Europe/London' => 'London',
+			'Europe/Paris' => 'Paris',
+			'Europe/Berlin' => 'Berlin',
+			'Europe/Rome' => 'Rome',
+			'Europe/Madrid' => 'Madrid',
+			'Europe/Amsterdam' => 'Amsterdam',
+			'Europe/Brussels' => 'Brussels',
+			'Europe/Vienna' => 'Vienna',
+			'Europe/Stockholm' => 'Stockholm',
+			'Europe/Moscow' => 'Moscow',
+		),
+		'Asia' => array(
+			'Asia/Tokyo' => 'Tokyo',
+			'Asia/Shanghai' => 'Shanghai',
+			'Asia/Hong_Kong' => 'Hong Kong',
+			'Asia/Singapore' => 'Singapore',
+			'Asia/Kolkata' => 'Kolkata',
+			'Asia/Dubai' => 'Dubai',
+			'Asia/Bangkok' => 'Bangkok',
+			'Asia/Seoul' => 'Seoul',
+			'Asia/Manila' => 'Manila',
+		),
+		'Australia' => array(
+			'Australia/Sydney' => 'Sydney',
+			'Australia/Melbourne' => 'Melbourne',
+			'Australia/Brisbane' => 'Brisbane',
+			'Australia/Perth' => 'Perth',
+			'Australia/Adelaide' => 'Adelaide',
+		),
+		'Africa' => array(
+			'Africa/Cairo' => 'Cairo',
+			'Africa/Johannesburg' => 'Johannesburg',
+			'Africa/Lagos' => 'Lagos',
+		),
+		'Pacific' => array(
+			'Pacific/Auckland' => 'Auckland',
+			'Pacific/Honolulu' => 'Honolulu',
+		),
+	);
+	
+	$timezone_identifiers = timezone_identifiers_list();
+	
+	foreach ( $timezone_regions as $region => $timezones ) {
+		foreach ( $timezones as $timezone_id => $city_name ) {
+			if ( in_array( $timezone_id, $timezone_identifiers ) ) {
+				$timezone_options[] = array(
+					'value' => $timezone_id,
+					'label' => "{$city_name} ({$region})"
+				);
+			}
+		}
+	}
+	
+	return $timezone_options;
+}
+
 function helix_get_settings_config() {
 	return array(
 		'site_information'   => array(
@@ -315,12 +475,14 @@ function helix_get_settings_config() {
 				'description' => __( 'The language for your site.', 'helix' ),
 				'type'        => 'string',
 				'default'     => get_locale(),
+				'enum'        => helix_get_available_languages(),
 			),
 			'timezone'   => array(
 				'label'       => __( 'Timezone', 'helix' ),
 				'description' => __( 'Choose either a city in the same timezone as you or a UTC timezone offset.', 'helix' ),
 				'type'        => 'string',
 				'default'     => get_option( 'timezone_string', 'UTC' ),
+				'enum'        => helix_get_available_timezones(),
 			),
 		),
 		'content_reading'    => array(

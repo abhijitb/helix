@@ -14,6 +14,17 @@ export const useSettings = () => {
 	const [ hasUnsavedChanges, setHasUnsavedChanges ] = useState( false );
 
 	/**
+	 * Get the value for comparison from a setting (handles both object and primitive formats)
+	 * @param {any} setting - Setting data
+	 * @return {any} The value for comparison
+	 */
+	const getSettingValue = ( setting ) => {
+		return setting && typeof setting === 'object' && 'value' in setting
+			? setting.value
+			: setting;
+	};
+
+	/**
 	 * Load settings from API
 	 */
 	const loadSettings = useCallback( async () => {
@@ -27,8 +38,17 @@ export const useSettings = () => {
 			const flattenedSettings = {};
 			Object.keys( data ).forEach( ( category ) => {
 				Object.keys( data[ category ] ).forEach( ( setting ) => {
-					flattenedSettings[ setting ] =
-						data[ category ][ setting ].value;
+					const settingData = data[ category ][ setting ];
+					// If setting has options (for dropdowns), keep the full object
+					if (
+						settingData.options &&
+						Array.isArray( settingData.options )
+					) {
+						flattenedSettings[ setting ] = settingData;
+					} else {
+						// For simple settings, just extract the value
+						flattenedSettings[ setting ] = settingData.value;
+					}
 				} );
 			} );
 
@@ -50,13 +70,28 @@ export const useSettings = () => {
 	const updateSetting = useCallback(
 		( key, value ) => {
 			setSettings( ( prev ) => {
-				const newSettings = { ...prev, [ key ]: value };
+				let newSettings;
+
+				// If the current setting is an object with options, preserve the structure
+				if (
+					prev[ key ] &&
+					typeof prev[ key ] === 'object' &&
+					'options' in prev[ key ]
+				) {
+					newSettings = {
+						...prev,
+						[ key ]: { ...prev[ key ], value },
+					};
+				} else {
+					// For simple settings, just set the value directly
+					newSettings = { ...prev, [ key ]: value };
+				}
 
 				// Check if there are unsaved changes
 				const hasChanges = Object.keys( newSettings ).some(
 					( settingKey ) =>
-						newSettings[ settingKey ] !==
-						originalSettings[ settingKey ]
+						getSettingValue( newSettings[ settingKey ] ) !==
+						getSettingValue( originalSettings[ settingKey ] )
 				);
 				setHasUnsavedChanges( hasChanges );
 
@@ -77,8 +112,13 @@ export const useSettings = () => {
 			// Only send changed settings
 			const changedSettings = {};
 			Object.keys( settings ).forEach( ( key ) => {
-				if ( settings[ key ] !== originalSettings[ key ] ) {
-					changedSettings[ key ] = settings[ key ];
+				const currentValue = getSettingValue( settings[ key ] );
+				const originalValue = getSettingValue(
+					originalSettings[ key ]
+				);
+
+				if ( currentValue !== originalValue ) {
+					changedSettings[ key ] = currentValue;
 				}
 			} );
 
@@ -121,7 +161,8 @@ export const useSettings = () => {
 	 */
 	const resetSetting = useCallback(
 		( key ) => {
-			updateSetting( key, originalSettings[ key ] );
+			const originalValue = getSettingValue( originalSettings[ key ] );
+			updateSetting( key, originalValue );
 		},
 		[ originalSettings, updateSetting ]
 	);
