@@ -35,8 +35,8 @@ function helix_get_settings_schema() {
  */
 function helix_update_settings_schema() {
 	$settings_config = helix_get_settings_config();
-	$schema = array(
-		'type' => 'object',
+	$schema          = array(
+		'type'       => 'object',
 		'properties' => array(),
 	);
 
@@ -46,12 +46,12 @@ function helix_update_settings_schema() {
 				'type' => get_rest_api_type( $setting_config['type'] ),
 			);
 
-			// Add enum validation if applicable
+			// Add enum validation if applicable.
 			if ( isset( $setting_config['enum'] ) ) {
 				$schema['properties'][ $setting_key ]['enum'] = $setting_config['enum'];
 			}
 
-			// Add minimum/maximum validation for numbers
+			// Add minimum/maximum validation for numbers.
 			if ( isset( $setting_config['min'] ) ) {
 				$schema['properties'][ $setting_key ]['minimum'] = $setting_config['min'];
 			}
@@ -287,9 +287,9 @@ function helix_sanitize_setting_value( $setting, $value ) {
 			break;
 	}
 
-	// For any type with enum values, validate against allowed values
+	// For any type with enum values, validate against allowed values.
 	if ( isset( $setting_config['enum'] ) ) {
-		// Extract values from enum options if they are objects with 'value' property
+		// Extract values from enum options if they are objects with 'value' property.
 		$enum_values = array();
 		foreach ( $setting_config['enum'] as $option ) {
 			if ( is_array( $option ) && isset( $option['value'] ) ) {
@@ -298,7 +298,7 @@ function helix_sanitize_setting_value( $setting, $value ) {
 				$enum_values[] = $option;
 			}
 		}
-		
+
 		if ( ! in_array( $sanitized, $enum_values, true ) ) {
 			return new WP_Error(
 				'helix_invalid_enum_value',
@@ -322,17 +322,16 @@ function helix_sanitize_setting_value( $setting, $value ) {
  * @since 1.0.0
  * @param string $setting The setting key.
  * @param mixed  $value The sanitized value.
- * @param string $option_name The WordPress option name.
  * @return bool|null True if successful, false if failed, null if not a special setting.
  */
 function helix_update_setting( $setting, $value ) {
-	// Handle timezone setting
-	if ( $setting === 'timezone' ) {
+	// Handle timezone setting.
+	if ( 'timezone' === $setting ) {
 		return helix_update_timezone_setting( $value );
-	} else if ( $setting === 'language' ) {
+	} elseif ( 'language' === $setting ) {
 		return helix_update_language_setting( $value );
 	}
-	// Not a special setting
+	// Not a special setting.
 	return false;
 }
 
@@ -344,26 +343,26 @@ function helix_update_setting( $setting, $value ) {
  * @return bool True if successful, false otherwise.
  */
 function helix_update_language_setting( $locale ) {
-	// Try to update the option first
+	// Try to update the option first.
 	$result = update_option( 'WPLANG', $locale );
-	
-	// If it failed, try to install the language pack
+
+	// If it failed, try to install the language pack.
 	if ( ! $result && function_exists( 'switch_to_locale' ) ) {
-		// Check if the language file exists
-		$lang_dir = WP_CONTENT_DIR . '/languages/';
+		// Check if the language file exists.
+		$lang_dir  = WP_CONTENT_DIR . '/languages/';
 		$lang_file = $lang_dir . $locale . '.po';
-		
-		// If language file doesn't exist, try to install it
+
+		// If language file doesn't exist, try to install it.
 		if ( ! file_exists( $lang_file ) ) {
 			$install_result = helix_install_language_pack( $locale );
-			
+
 			if ( $install_result ) {
-				// Try updating the option again
+				// Try updating the option again.
 				$result = update_option( 'WPLANG', $locale );
 			}
 		}
 	}
-	
+
 	return $result;
 }
 
@@ -375,47 +374,47 @@ function helix_update_language_setting( $locale ) {
  * @return bool True if update succeeded, false otherwise.
  */
 function helix_update_timezone_setting( $timezone_value ) {
-	// Check if it's a GMT offset (starts with UTC+ or UTC- or is numeric)
+	// Check if it's a GMT offset (starts with UTC+ or UTC- or is numeric).
 	if ( preg_match( '/^UTC[+-](\d+(?:\.\d+)?)$/', $timezone_value, $matches ) ) {
-		// Extract the numeric offset
-		$offset = $matches[1];
+		// Extract the numeric offset.
+		$offset      = $matches[1];
 		$is_negative = strpos( $timezone_value, 'UTC-' ) === 0;
-		
-		// Convert to numeric value (negative if UTC-)
+
+		// Convert to numeric value (negative if UTC-).
 		$numeric_offset = $is_negative ? -1 * floatval( $offset ) : floatval( $offset );
-		
-		// Save to gmt_offset option
+
+		// Save to gmt_offset option.
 		$result = update_option( 'gmt_offset', $numeric_offset );
-		
-		// Clear the timezone_string option since we're using GMT offset
+
+		// Clear the timezone_string option since we're using GMT offset.
 		if ( $result ) {
 			update_option( 'timezone_string', '' );
 		}
-		
+
 		return $result;
 	} elseif ( is_numeric( $timezone_value ) ) {
-		// Direct numeric offset (like "5.5")
+		// Direct numeric offset (like "5.5").
 		$numeric_offset = floatval( $timezone_value );
-		
-		// Save to gmt_offset option
+
+		// Save to gmt_offset option.
 		$result = update_option( 'gmt_offset', $numeric_offset );
-		
-		// Clear the timezone_string option since we're using GMT offset
+
+		// Clear the timezone_string option since we're using GMT offset.
 		if ( $result ) {
 			update_option( 'timezone_string', '' );
 		}
-		
+
 		return $result;
 	} else {
-		// City-based timezone (like "Asia/Kolkata")
-		// Save to timezone_string option
+		// City-based timezone (like "Asia/Kolkata").
+		// Save to timezone_string option.
 		$result = update_option( 'timezone_string', $timezone_value );
-		
-		// Clear the gmt_offset option since we're using city-based timezone
+
+		// Clear the gmt_offset option since we're using city-based timezone.
 		if ( $result ) {
 			update_option( 'gmt_offset', '' );
 		}
-		
+
 		return $result;
 	}
 }
@@ -428,48 +427,48 @@ function helix_update_timezone_setting( $timezone_value ) {
  */
 function helix_get_available_languages() {
 	$language_options = array();
-	
-	// Add English (United States) as default
+
+	// Add English (United States) as default.
 	$language_options[] = array(
 		'value' => '',
-		'label' => 'English (United States)'
+		'label' => 'English (United States)',
 	);
-	
-	// First, try to get installed languages
+
+	// First, try to get installed languages.
 	if ( function_exists( 'get_available_languages' ) ) {
 		$installed_languages = get_available_languages();
 	} else {
 		$installed_languages = array();
 	}
-	
-	// Always try to include the required file first
+
+	// Always try to include the required file first.
 	if ( ! function_exists( 'wp_get_available_translations' ) && file_exists( ABSPATH . 'wp-admin/includes/translation-install.php' ) ) {
-		require_once( ABSPATH . 'wp-admin/includes/translation-install.php' );
+		require_once ABSPATH . 'wp-admin/includes/translation-install.php';
 	}
-	
-	// Get all available translations (including uninstalled ones)
+
+	// Get all available translations (including uninstalled ones).
 	if ( function_exists( 'wp_get_available_translations' ) ) {
 		$available_translations = wp_get_available_translations();
-		
-		// Add all available languages
+
+		// Add all available languages.
 		foreach ( $available_translations as $locale => $translation_data ) {
 			$label = isset( $translation_data['native_name'] ) ? $translation_data['native_name'] : $locale;
-			
-			// Mark installed languages differently
-			$is_installed = in_array( $locale, $installed_languages );
+
+			// Mark installed languages differently.
+			$is_installed  = in_array( $locale, $installed_languages, true );
 			$display_label = $is_installed ? $label : $label . ' (Not Installed)';
-			
+
 			$language_options[] = array(
-				'value' => $locale,
-				'label' => $display_label,
-				'installed' => $is_installed
+				'value'     => $locale,
+				'label'     => $display_label,
+				'installed' => $is_installed,
 			);
 		}
 	} else {
-		// Fallback to common languages if wp_get_available_translations is still not available
+		// Fallback to common languages if wp_get_available_translations is still not available.
 		$language_options = helix_get_fallback_languages( $installed_languages );
 	}
-	
+
 	return $language_options;
 }
 
@@ -481,7 +480,7 @@ function helix_get_available_languages() {
  * @return bool True if installation succeeded, false otherwise.
  */
 function helix_install_language_pack( $locale ) {
-	// Make sure we have the required functions
+	// Make sure we have the required functions.
 	if ( ! function_exists( 'wp_download_language_pack' ) ) {
 		if ( file_exists( ABSPATH . 'wp-admin/includes/translation-install.php' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/translation-install.php';
@@ -489,8 +488,8 @@ function helix_install_language_pack( $locale ) {
 			return false;
 		}
 	}
-	
-	// Make sure we have the filesystem API
+
+	// Make sure we have the filesystem API.
 	if ( ! function_exists( 'request_filesystem_credentials' ) ) {
 		if ( file_exists( ABSPATH . 'wp-admin/includes/file.php' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/file.php';
@@ -498,45 +497,44 @@ function helix_install_language_pack( $locale ) {
 			return false;
 		}
 	}
-	
-	// Check if the function is now available
+
+	// Check if the function is now available.
 	if ( ! function_exists( 'wp_download_language_pack' ) ) {
 		return false;
 	}
-	
-	// Check if filesystem API is available
+
+	// Check if filesystem API is available.
 	if ( ! function_exists( 'request_filesystem_credentials' ) ) {
 		return false;
 	}
-	
-	// Get available translations to verify the language exists
+
+	// Get available translations to verify the language exists.
 	if ( function_exists( 'wp_get_available_translations' ) ) {
 		$available_translations = wp_get_available_translations();
-		
+
 		if ( ! isset( $available_translations[ $locale ] ) ) {
 			return false;
 		}
 	}
-	
-	// Try to download and install the language pack
+
+	// Try to download and install the language pack.
 	try {
-		
+
 		$download_result = wp_download_language_pack( $locale );
-		
+
 		if ( is_wp_error( $download_result ) ) {
 			return false;
 		}
-		
-		// Verify the language file now exists
-		$lang_dir = WP_CONTENT_DIR . '/languages/';
+
+		// Verify the language file now exists.
+		$lang_dir  = WP_CONTENT_DIR . '/languages/';
 		$lang_file = $lang_dir . $locale . '.po';
-		
+
 		if ( file_exists( $lang_file ) ) {
 			return true;
 		} else {
 			return false;
 		}
-		
 	} catch ( Exception $e ) {
 		return false;
 	}
@@ -551,41 +549,41 @@ function helix_install_language_pack( $locale ) {
  */
 function helix_get_fallback_languages( $installed_languages = array() ) {
 	$language_options = array();
-	
-	// Common languages as fallback
+
+	// Common languages as fallback.
 	$common_languages = array(
 		'en_GB' => 'English (United Kingdom)',
 		'es_ES' => 'Español',
 		'fr_FR' => 'Français',
-		'de_DE' => 'Deutsch', 
+		'de_DE' => 'Deutsch',
 		'it_IT' => 'Italiano',
 		'pt_BR' => 'Português do Brasil',
 		'ru_RU' => 'Русский',
-		'ja' => '日本語',
+		'ja'    => '日本語',
 		'zh_CN' => '简体中文',
-		'ar' => 'العربية',
+		'ar'    => 'العربية',
 		'hi_IN' => 'हिन्दी',
 		'ko_KR' => '한국어',
 		'nl_NL' => 'Nederlands',
 		'sv_SE' => 'Svenska',
 		'da_DK' => 'Dansk',
-		'fi' => 'Suomi',
-		'no' => 'Norsk',
+		'fi'    => 'Suomi',
+		'no'    => 'Norsk',
 		'pl_PL' => 'Polski',
 		'tr_TR' => 'Türkçe',
 	);
-	
+
 	foreach ( $common_languages as $code => $name ) {
-		$is_installed = in_array( $code, $installed_languages );
+		$is_installed  = in_array( $code, $installed_languages, true );
 		$display_label = $is_installed ? $name : $name . ' (Not Installed)';
-		
+
 		$language_options[] = array(
-			'value' => $code,
-			'label' => $display_label,
-			'installed' => $is_installed
+			'value'     => $code,
+			'label'     => $display_label,
+			'installed' => $is_installed,
 		);
 	}
-	
+
 	return $language_options;
 }
 
@@ -597,28 +595,28 @@ function helix_get_fallback_languages( $installed_languages = array() ) {
  */
 function helix_get_available_timezones() {
 	$timezone_options = array();
-	
-	// Use WordPress core function to get timezone choices
+
+	// Use WordPress core function to get timezone choices.
 	if ( function_exists( 'wp_timezone_choice' ) ) {
-		// Get the HTML output from wp_timezone_choice
+		// Get the HTML output from wp_timezone_choice.
 		$timezone_html = wp_timezone_choice( get_option( 'timezone_string', 'UTC' ) );
-		// Parse the HTML to extract option values and labels
+		// Parse the HTML to extract option values and labels.
 		if ( preg_match_all( '/<option[^>]*value=["\']([^"\']*)["\'][^>]*>([^<]*)<\/option>/', $timezone_html, $matches, PREG_SET_ORDER ) ) {
 			foreach ( $matches as $match ) {
 				$value = $match[1];
 				$label = trim( $match[2] );
-				
-				// Skip empty values
-				if ( ! empty( $value ) || $value === '0' ) {
+
+				// Skip empty values.
+				if ( ! empty( $value ) || '0' === $value ) {
 					$timezone_options[] = array(
 						'value' => $value,
-						'label' => $label
+						'label' => $label,
 					);
 				}
 			}
 		}
 	}
-	
+
 	return $timezone_options;
 }
 

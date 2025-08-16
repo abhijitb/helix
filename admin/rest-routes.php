@@ -21,8 +21,8 @@ add_action( 'rest_api_init', 'helix_register_rest_routes' );
  * @since 1.0.0
  */
 function helix_register_rest_routes() {
-	// Get the schemas
-	$get_schema = helix_get_settings_schema();
+	// Get the schemas.
+	$get_schema    = helix_get_settings_schema();
 	$update_schema = helix_update_settings_schema();
 
 	// Settings endpoints.
@@ -117,14 +117,14 @@ function helix_get_settings() {
  * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
  */
 function helix_update_settings( $request ) {
-	$params = $request->get_params();
+	$params           = $request->get_params();
 	$allowed_settings = helix_get_allowed_settings();
 	$updated_settings = array();
-	$errors = array();
+	$errors           = array();
 
-	// Process each setting
+	// Process each setting.
 	foreach ( $params as $setting => $value ) {
-		// Check if setting is allowed
+		// Check if setting is allowed.
 		if ( ! in_array( $setting, $allowed_settings, true ) ) {
 			$error_msg = sprintf(
 				/* translators: %s: Setting name */
@@ -135,21 +135,21 @@ function helix_update_settings( $request ) {
 			continue;
 		}
 
-		// Validate and sanitize the value
+		// Validate and sanitize the value.
 		$sanitized_value = helix_sanitize_setting_value( $setting, $value );
-		
+
 		if ( is_wp_error( $sanitized_value ) ) {
 			$errors[ $setting ] = $sanitized_value->get_error_message();
 			continue;
 		}
 
-		// Get the WordPress option name for this setting
+		// Get the WordPress option name for this setting.
 		$option_name = helix_get_wp_option_name( $setting );
-		
-		// Handle special settings that need custom update logic
+
+		// Handle special settings that need custom update logic.
 		$result = helix_update_setting( $setting, $sanitized_value );
-		
-		// If special handling didn't apply, update normally
+
+		// If special handling didn't apply, update normally.
 		if ( ! $result ) {
 			$result = update_option( $option_name, $sanitized_value );
 		}
@@ -157,9 +157,10 @@ function helix_update_settings( $request ) {
 		if ( $result ) {
 			$updated_settings[ $setting ] = $sanitized_value;
 		} else {
-			// Provide specific error messages for special settings
-			if ( $setting === 'language' ) {
+			// Provide specific error messages for special settings.
+			if ( 'language' === $setting ) {
 				$error_msg = sprintf(
+					/* translators: %s: Language name */
 					__( 'Language "%s" could not be installed automatically. Please install the language pack manually via WordPress Admin → Settings → General → Site Language.', 'helix' ),
 					$sanitized_value
 				);
