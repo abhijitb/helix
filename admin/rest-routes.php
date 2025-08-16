@@ -21,6 +21,10 @@ add_action( 'rest_api_init', 'helix_register_rest_routes' );
  * @since 1.0.0
  */
 function helix_register_rest_routes() {
+	// Get the schemas
+	$get_schema = helix_get_settings_schema();
+	$update_schema = helix_update_settings_schema();
+
 	// Settings endpoints.
 	register_rest_route(
 		'helix/v1',
@@ -30,13 +34,13 @@ function helix_register_rest_routes() {
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => 'helix_get_settings',
 				'permission_callback' => 'helix_settings_permissions_check',
-				'args'                => helix_get_settings_schema(),
+				'args'                => $get_schema,
 			),
 			array(
 				'methods'             => WP_REST_Server::EDITABLE,
 				'callback'            => 'helix_update_settings',
 				'permission_callback' => 'helix_settings_permissions_check',
-				'args'                => helix_update_settings_schema(),
+				'args'                => $update_schema,
 			),
 		)
 	);
@@ -113,44 +117,79 @@ function helix_get_settings() {
  * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
  */
 function helix_update_settings( $request ) {
-	$params = $request->get_json_params();
-
-	if ( empty( $params ) ) {
-		return new WP_Error(
-			'helix_no_settings_data',
-			__( 'No settings data provided.', 'helix' ),
-			array( 'status' => 400 )
-		);
-	}
-
-	$updated_settings = array();
-	$errors           = array();
+	$params = $request->get_params();
 	$allowed_settings = helix_get_allowed_settings();
+	$updated_settings = array();
+	$errors = array();
 
+	// Process each setting
 	foreach ( $params as $setting => $value ) {
+		// Check if setting is allowed
 		if ( ! in_array( $setting, $allowed_settings, true ) ) {
-			$errors[ $setting ] = sprintf(
+			$error_msg = sprintf(
 				/* translators: %s: Setting name */
-				__( 'Setting "%s" is not allowed to be updated.', 'helix' ),
+				__( 'Setting "%s" is not allowed.', 'helix' ),
 				$setting
 			);
+			$errors[ $setting ] = $error_msg;
 			continue;
 		}
 
+		// Validate and sanitize the value
 		$sanitized_value = helix_sanitize_setting_value( $setting, $value );
-
+		
 		if ( is_wp_error( $sanitized_value ) ) {
 			$errors[ $setting ] = $sanitized_value->get_error_message();
 			continue;
 		}
 
+		// Get the WordPress option name for this setting
 		$option_name = helix_get_wp_option_name( $setting );
-		$result      = update_option( $option_name, $sanitized_value );
+		
+		// Update the WordPress option
+		$result = update_option( $option_name, $sanitized_value );
+		
+		// Special handling for WPLANG option
+		if ( $option_name === 'WPLANG' && ! $result ) {
+			// Check if switch_to_locale function is available
+			if ( function_exists( 'switch_to_locale' ) ) {
+				// Check if the language file exists
+				$lang_dir = WP_CONTENT_DIR . '/languages/';
+				$lang_file = $lang_dir . $sanitized_value . '.po';
+				
+				// If language file doesn't exist, try to install it
+				if ( ! file_exists( $lang_file ) ) {
+					// Try to install the language pack using WordPress core functions
+					$install_result = helix_install_language_pack( $sanitized_value );
+					
+					if ( $install_result ) {
+						// Try updating the option again
+						$result = update_option( $option_name, $sanitized_value );
+						
+						if ( $result ) {
+							$updated_settings[ $setting ] = $sanitized_value;
+							continue; // Skip to next setting
+						}
+					}
+				}
+			}
+			
+			// If we still can't update, provide a helpful error message
+			if ( ! $result ) {
+				$error_msg = sprintf(
+					__( 'Language "%s" could not be installed automatically. Please install the language pack manually via WordPress Admin → Settings → General → Site Language.', 'helix' ),
+					$sanitized_value
+				);
+				$errors[ $setting ] = $error_msg;
+				continue; // Skip to next setting
+			}
+		}
 
 		if ( $result ) {
 			$updated_settings[ $setting ] = $sanitized_value;
 		} else {
-			$errors[ $setting ] = __( 'Failed to update setting.', 'helix' );
+			$error_msg = __( 'Failed to update setting.', 'helix' );
+			$errors[ $setting ] = $error_msg;
 		}
 	}
 
