@@ -146,54 +146,26 @@ function helix_update_settings( $request ) {
 		// Get the WordPress option name for this setting
 		$option_name = helix_get_wp_option_name( $setting );
 		
-		// Special handling for timezone setting
-		if ( $setting === 'timezone' ) {
-			$result = helix_update_timezone_setting( $sanitized_value );
-		} else {
-			// Update the WordPress option normally
-			$result = update_option( $option_name, $sanitized_value );
-		}
+		// Handle special settings that need custom update logic
+		$result = helix_update_setting( $setting, $sanitized_value );
 		
-		// Special handling for WPLANG option
-		if ( $option_name === 'WPLANG' && ! $result ) {
-			// Check if switch_to_locale function is available
-			if ( function_exists( 'switch_to_locale' ) ) {
-				// Check if the language file exists
-				$lang_dir = WP_CONTENT_DIR . '/languages/';
-				$lang_file = $lang_dir . $sanitized_value . '.po';
-				
-				// If language file doesn't exist, try to install it
-				if ( ! file_exists( $lang_file ) ) {
-					// Try to install the language pack using WordPress core functions
-					$install_result = helix_install_language_pack( $sanitized_value );
-					
-					if ( $install_result ) {
-						// Try updating the option again
-						$result = update_option( $option_name, $sanitized_value );
-						
-						if ( $result ) {
-							$updated_settings[ $setting ] = $sanitized_value;
-							continue; // Skip to next setting
-						}
-					}
-				}
-			}
-			
-			// If we still can't update, provide a helpful error message
-			if ( ! $result ) {
-				$error_msg = sprintf(
-					__( 'Language "%s" could not be installed automatically. Please install the language pack manually via WordPress Admin → Settings → General → Site Language.', 'helix' ),
-					$sanitized_value
-				);
-				$errors[ $setting ] = $error_msg;
-				continue; // Skip to next setting
-			}
+		// If special handling didn't apply, update normally
+		if ( ! $result ) {
+			$result = update_option( $option_name, $sanitized_value );
 		}
 
 		if ( $result ) {
 			$updated_settings[ $setting ] = $sanitized_value;
 		} else {
-			$error_msg = __( 'Failed to update setting.', 'helix' );
+			// Provide specific error messages for special settings
+			if ( $setting === 'language' ) {
+				$error_msg = sprintf(
+					__( 'Language "%s" could not be installed automatically. Please install the language pack manually via WordPress Admin → Settings → General → Site Language.', 'helix' ),
+					$sanitized_value
+				);
+			} else {
+				$error_msg = __( 'Failed to update setting.', 'helix' );
+			}
 			$errors[ $setting ] = $error_msg;
 		}
 	}

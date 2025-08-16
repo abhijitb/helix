@@ -317,6 +317,57 @@ function helix_sanitize_setting_value( $setting, $value ) {
 }
 
 /**
+ * Update special settings that require custom logic.
+ *
+ * @since 1.0.0
+ * @param string $setting The setting key.
+ * @param mixed  $value The sanitized value.
+ * @param string $option_name The WordPress option name.
+ * @return bool|null True if successful, false if failed, null if not a special setting.
+ */
+function helix_update_setting( $setting, $value ) {
+	// Handle timezone setting
+	if ( $setting === 'timezone' ) {
+		return helix_update_timezone_setting( $value );
+	} else if ( $setting === 'language' ) {
+		return helix_update_language_setting( $value );
+	}
+	// Not a special setting
+	return false;
+}
+
+/**
+ * Update language setting with automatic language pack installation.
+ *
+ * @since 1.0.0
+ * @param string $locale The language locale to set.
+ * @return bool True if successful, false otherwise.
+ */
+function helix_update_language_setting( $locale ) {
+	// Try to update the option first
+	$result = update_option( 'WPLANG', $locale );
+	
+	// If it failed, try to install the language pack
+	if ( ! $result && function_exists( 'switch_to_locale' ) ) {
+		// Check if the language file exists
+		$lang_dir = WP_CONTENT_DIR . '/languages/';
+		$lang_file = $lang_dir . $locale . '.po';
+		
+		// If language file doesn't exist, try to install it
+		if ( ! file_exists( $lang_file ) ) {
+			$install_result = helix_install_language_pack( $locale );
+			
+			if ( $install_result ) {
+				// Try updating the option again
+				$result = update_option( 'WPLANG', $locale );
+			}
+		}
+	}
+	
+	return $result;
+}
+
+/**
  * Update timezone setting by handling both city-based timezones and GMT offsets.
  *
  * @since 1.0.0
