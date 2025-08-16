@@ -40,22 +40,24 @@ function helix_update_settings_schema() {
 		'properties' => array(),
 	);
 
-	foreach ( $settings_config as $setting_key => $setting_config ) {
-		$schema['properties'][ $setting_key ] = array(
-			'type' => get_rest_api_type( $setting_config['type'] ),
-		);
+	foreach ( $settings_config as $category => $category_settings ) {
+		foreach ( $category_settings as $setting_key => $setting_config ) {
+			$schema['properties'][ $setting_key ] = array(
+				'type' => get_rest_api_type( $setting_config['type'] ),
+			);
 
-		// Add enum validation if applicable
-		if ( isset( $setting_config['enum'] ) ) {
-			$schema['properties'][ $setting_key ]['enum'] = $setting_config['enum'];
-		}
+			// Add enum validation if applicable
+			if ( isset( $setting_config['enum'] ) ) {
+				$schema['properties'][ $setting_key ]['enum'] = $setting_config['enum'];
+			}
 
-		// Add minimum/maximum validation for numbers
-		if ( isset( $setting_config['min'] ) ) {
-			$schema['properties'][ $setting_key ]['minimum'] = $setting_config['min'];
-		}
-		if ( isset( $setting_config['max'] ) ) {
-			$schema['properties'][ $setting_key ]['maximum'] = $setting_config['max'];
+			// Add minimum/maximum validation for numbers
+			if ( isset( $setting_config['min'] ) ) {
+				$schema['properties'][ $setting_key ]['minimum'] = $setting_config['min'];
+			}
+			if ( isset( $setting_config['max'] ) ) {
+				$schema['properties'][ $setting_key ]['maximum'] = $setting_config['max'];
+			}
 		}
 	}
 
@@ -250,7 +252,8 @@ function helix_sanitize_setting_value( $setting, $value ) {
 	// Default sanitization based on type.
 	switch ( $setting_config['type'] ) {
 		case 'string':
-			return sanitize_text_field( $value );
+			$sanitized = sanitize_text_field( $value );
+			break;
 
 		case 'email':
 			$sanitized = sanitize_email( $value );
@@ -261,56 +264,111 @@ function helix_sanitize_setting_value( $setting, $value ) {
 					array( 'status' => 400 )
 				);
 			}
-			return $sanitized;
+			break;
 
 		case 'url':
-			return esc_url_raw( $value );
+			$sanitized = esc_url_raw( $value );
+			break;
 
 		case 'integer':
-			return absint( $value );
+			$sanitized = absint( $value );
+			break;
 
 		case 'number':
-			return floatval( $value );
+			$sanitized = floatval( $value );
+			break;
 
 		case 'boolean':
-			return rest_sanitize_boolean( $value );
+			$sanitized = rest_sanitize_boolean( $value );
+			break;
 
 		default:
-			// For enum types, validate against allowed values.
-			if ( isset( $setting_config['enum'] ) ) {
-				// Extract values from enum options if they are objects with 'value' property
-				$enum_values = array();
-				foreach ( $setting_config['enum'] as $option ) {
-					if ( is_array( $option ) && isset( $option['value'] ) ) {
-						$enum_values[] = $option['value'];
-					} else {
-						$enum_values[] = $option;
-					}
-				}
-				
-				if ( ! in_array( $value, $enum_values, true ) ) {
-					return new WP_Error(
-						'helix_invalid_enum_value',
-						sprintf(
-							/* translators: 1: Setting name, 2: Allowed values */
-							__( 'Invalid value for %1$s. Allowed values: %2$s', 'helix' ),
-							$setting,
-							implode( ', ', $enum_values )
-						),
-						array( 'status' => 400 )
-					);
-				}
-			}
-			return sanitize_text_field( $value );
+			$sanitized = sanitize_text_field( $value );
+			break;
 	}
+
+	// For any type with enum values, validate against allowed values
+	if ( isset( $setting_config['enum'] ) ) {
+		// Extract values from enum options if they are objects with 'value' property
+		$enum_values = array();
+		foreach ( $setting_config['enum'] as $option ) {
+			if ( is_array( $option ) && isset( $option['value'] ) ) {
+				$enum_values[] = $option['value'];
+			} else {
+				$enum_values[] = $option;
+			}
+		}
+		
+		if ( ! in_array( $sanitized, $enum_values, true ) ) {
+			return new WP_Error(
+				'helix_invalid_enum_value',
+				sprintf(
+					/* translators: 1: Setting name, 2: Allowed values */
+					__( 'Invalid value for %1$s. Allowed values: %2$s', 'helix' ),
+					$setting,
+					implode( ', ', $enum_values )
+				),
+				array( 'status' => 400 )
+			);
+		}
+	}
+
+	return $sanitized;
 }
 
 /**
- * Get comprehensive settings configuration.
+ * Update timezone setting by handling both city-based timezones and GMT offsets.
  *
  * @since 1.0.0
- * @return array Settings configuration array.
+ * @param string $timezone_value The timezone value to save.
+ * @return bool True if update succeeded, false otherwise.
  */
+function helix_update_timezone_setting( $timezone_value ) {
+	// Check if it's a GMT offset (starts with UTC+ or UTC- or is numeric)
+	if ( preg_match( '/^UTC[+-](\d+(?:\.\d+)?)$/', $timezone_value, $matches ) ) {
+		// Extract the numeric offset
+		$offset = $matches[1];
+		$is_negative = strpos( $timezone_value, 'UTC-' ) === 0;
+		
+		// Convert to numeric value (negative if UTC-)
+		$numeric_offset = $is_negative ? -1 * floatval( $offset ) : floatval( $offset );
+		
+		// Save to gmt_offset option
+		$result = update_option( 'gmt_offset', $numeric_offset );
+		
+		// Clear the timezone_string option since we're using GMT offset
+		if ( $result ) {
+			update_option( 'timezone_string', '' );
+		}
+		
+		return $result;
+	} elseif ( is_numeric( $timezone_value ) ) {
+		// Direct numeric offset (like "5.5")
+		$numeric_offset = floatval( $timezone_value );
+		
+		// Save to gmt_offset option
+		$result = update_option( 'gmt_offset', $numeric_offset );
+		
+		// Clear the timezone_string option since we're using GMT offset
+		if ( $result ) {
+			update_option( 'timezone_string', '' );
+		}
+		
+		return $result;
+	} else {
+		// City-based timezone (like "Asia/Kolkata")
+		// Save to timezone_string option
+		$result = update_option( 'timezone_string', $timezone_value );
+		
+		// Clear the gmt_offset option since we're using city-based timezone
+		if ( $result ) {
+			update_option( 'gmt_offset', '' );
+		}
+		
+		return $result;
+	}
+}
+
 /**
  * Get available WordPress languages.
  *
@@ -513,6 +571,12 @@ function helix_get_available_timezones() {
 	return $timezone_options;
 }
 
+/**
+ * Get comprehensive settings configuration.
+ *
+ * @since 1.0.0
+ * @return array Settings configuration array.
+ */
 function helix_get_settings_config() {
 	return array(
 		'site_information'   => array(
@@ -687,13 +751,13 @@ function helix_get_settings_config() {
 			),
 			'largeSizeW'                 => array(
 				'label'       => __( 'Large Width', 'helix' ),
-				'description' => __( 'Maximum width of large-sized images.', 'helix' ),
+				'description' => __( 'Maximum width of large images.', 'helix' ),
 				'type'        => 'integer',
 				'default'     => 1024,
 			),
 			'largeSizeH'                 => array(
 				'label'       => __( 'Large Height', 'helix' ),
-				'description' => __( 'Maximum height of large-sized images.', 'helix' ),
+				'description' => __( 'Maximum height of large images.', 'helix' ),
 				'type'        => 'integer',
 				'default'     => 1024,
 			),

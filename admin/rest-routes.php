@@ -146,8 +146,13 @@ function helix_update_settings( $request ) {
 		// Get the WordPress option name for this setting
 		$option_name = helix_get_wp_option_name( $setting );
 		
-		// Update the WordPress option
-		$result = update_option( $option_name, $sanitized_value );
+		// Special handling for timezone setting
+		if ( $setting === 'timezone' ) {
+			$result = helix_update_timezone_setting( $sanitized_value );
+		} else {
+			// Update the WordPress option normally
+			$result = update_option( $option_name, $sanitized_value );
+		}
 		
 		// Special handling for WPLANG option
 		if ( $option_name === 'WPLANG' && ! $result ) {
