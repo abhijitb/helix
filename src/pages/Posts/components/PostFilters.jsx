@@ -34,10 +34,7 @@ export default function PostFilters( { filters, onFilterChange } ) {
 				const authorsData = await response.json();
 				setAuthors( authorsData );
 			}
-		} catch ( error ) {
-			// eslint-disable-next-line no-console
-			console.error( 'Error fetching authors:', error );
-		}
+		} catch ( error ) {}
 	};
 
 	/**
@@ -55,10 +52,7 @@ export default function PostFilters( { filters, onFilterChange } ) {
 				const categoriesData = await response.json();
 				setCategories( categoriesData );
 			}
-		} catch ( error ) {
-			// eslint-disable-next-line no-console
-			console.error( 'Error fetching categories:', error );
-		}
+		} catch ( error ) {}
 	};
 
 	/**

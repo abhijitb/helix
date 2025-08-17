@@ -91,10 +91,8 @@ export default function PostRow( { post, onDelete, onStatusChange } ) {
 	/**
 	 * Handle quick edit (placeholder for future implementation)
 	 */
-	const handleQuickEdit = ( postData ) => {
+	const handleQuickEdit = () => {
 		// TODO: Implement quick edit modal
-		// eslint-disable-next-line no-console
-		console.log( 'Quick edit for post:', postData.id );
 		setShowActions( false );
 	};
 

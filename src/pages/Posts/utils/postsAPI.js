@@ -42,8 +42,6 @@ export const fetchPosts = async ( params = {} ) => {
 			},
 		};
 	} catch ( error ) {
-		// eslint-disable-next-line no-console
-		console.error( 'Error fetching posts:', error );
 		throw error;
 	}
 };
@@ -61,8 +59,6 @@ export const fetchPost = async ( postId ) => {
 
 		return await response.json();
 	} catch ( error ) {
-		// eslint-disable-next-line no-console
-		console.error( 'Error fetching post:', error );
 		throw error;
 	}
 };
@@ -87,8 +83,6 @@ export const createPost = async ( postData ) => {
 
 		return await response.json();
 	} catch ( error ) {
-		// eslint-disable-next-line no-console
-		console.error( 'Error creating post:', error );
 		throw error;
 	}
 };
@@ -113,8 +107,6 @@ export const updatePost = async ( postId, postData ) => {
 
 		return await response.json();
 	} catch ( error ) {
-		// eslint-disable-next-line no-console
-		console.error( 'Error updating post:', error );
 		throw error;
 	}
 };
@@ -137,8 +129,6 @@ export const deletePost = async ( postId ) => {
 
 		return true;
 	} catch ( error ) {
-		// eslint-disable-next-line no-console
-		console.error( 'Error deleting post:', error );
 		throw error;
 	}
 };
@@ -156,8 +146,6 @@ export const fetchAuthors = async () => {
 
 		return await response.json();
 	} catch ( error ) {
-		// eslint-disable-next-line no-console
-		console.error( 'Error fetching authors:', error );
 		throw error;
 	}
 };
@@ -175,8 +163,6 @@ export const fetchCategories = async () => {
 
 		return await response.json();
 	} catch ( error ) {
-		// eslint-disable-next-line no-console
-		console.error( 'Error fetching categories:', error );
 		throw error;
 	}
 };
@@ -194,8 +180,6 @@ export const fetchTags = async () => {
 
 		return await response.json();
 	} catch ( error ) {
-		// eslint-disable-next-line no-console
-		console.error( 'Error fetching tags:', error );
 		throw error;
 	}
 };

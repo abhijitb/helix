@@ -8,10 +8,6 @@ import './Posts.css';
  * Phase 1: Foundation & Core List View with Pagination
  */
 export default function Posts() {
-	// Debug: Log when component mounts
-	// eslint-disable-next-line no-console
-	console.log( 'Posts component mounted' );
-
 	const [ posts, setPosts ] = useState( [] );
 	const [ loading, setLoading ] = useState( true );
 	const [ error, setError ] = useState( null );
@@ -34,10 +30,6 @@ export default function Posts() {
 	const fetchPosts = useCallback( async () => {
 		setLoading( true );
 		setError( null );
-
-		// Debug: Log function start
-		// eslint-disable-next-line no-console
-		console.log( 'fetchPosts function called' );
 
 		try {
 			const queryParams = new URLSearchParams( {
@@ -63,12 +55,6 @@ export default function Posts() {
 				window.location.origin + '/wp-json/wp/v2/'
 			}posts?${ queryParams }`;
 
-			// Debug: Log the API URL and nonce
-			// eslint-disable-next-line no-console
-			console.log( 'API URL:', apiUrl );
-			// eslint-disable-next-line no-console
-			console.log( 'Nonce:', window.helixData?.nonce );
-
 			// Try different authentication methods
 			const headers = {
 				'X-WP-Nonce': window.helixData?.nonce || '',
@@ -90,18 +76,6 @@ export default function Posts() {
 			}
 
 			const postsData = await response.json();
-
-			// Debug: Log what posts we're getting
-			// eslint-disable-next-line no-console
-			console.log(
-				'Fetched posts:',
-				postsData.map( ( p ) => ( {
-					id: p.id,
-					title: p.title.rendered,
-					status: p.status,
-				} ) )
-			);
-
 			// Store posts for current page
 			setPosts( postsData );
 
@@ -120,25 +94,16 @@ export default function Posts() {
 			} ) );
 		} catch ( err ) {
 			setError( err.message );
-			// eslint-disable-next-line no-console
-			console.error( 'Error fetching posts:', err );
 		} finally {
 			setLoading( false );
 		}
 	}, [ pagination.page, pagination.perPage, filters ] );
 
-	// useEffect must come after fetchPosts is defined
 	useEffect( () => {
-		// Debug: Log when useEffect runs
-		// eslint-disable-next-line no-console
-		console.log( 'useEffect triggered, calling fetchPosts' );
 		fetchPosts();
-	}, [ fetchPosts ] ); // fetchPosts is now stable with useCallback
+	}, [ fetchPosts ] );
 
-	// Trigger fetch when filters change (for server-side filtering)
 	useEffect( () => {
-		// eslint-disable-next-line no-console
-		console.log( 'Filters changed, triggering new fetch' );
 		fetchPosts();
 	}, [ filters.status, filters.author, filters.search, fetchPosts ] );
 
@@ -147,8 +112,7 @@ export default function Posts() {
 	 */
 	const handleFilterChange = ( newFilters ) => {
 		setFilters( newFilters );
-		setPagination( ( prev ) => ( { ...prev, page: 1 } ) ); // Reset to first page
-		// API call will be triggered by useEffect dependency
+		setPagination( ( prev ) => ( { ...prev, page: 1 } ) );
 	};
 
 	/**

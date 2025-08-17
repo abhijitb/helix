@@ -42,18 +42,9 @@ document.addEventListener( 'DOMContentLoaded', function () {
 
 	// Posts page
 	const postsRoot = document.getElementById( 'helix-posts-root' );
-	// eslint-disable-next-line no-console
-	console.log( 'Posts root element:', postsRoot );
 	if ( postsRoot ) {
-		// eslint-disable-next-line no-console
-		console.log( 'Creating Posts app root' );
 		const root = createRoot( postsRoot );
 		root.render( <PostsApp /> );
-		// eslint-disable-next-line no-console
-		console.log( 'Posts app rendered' );
-	} else {
-		// eslint-disable-next-line no-console
-		console.log( 'Posts root element not found' );
 	}
 
 	// Users page
