@@ -5,7 +5,7 @@ import './Posts.css';
 
 /**
  * Main Posts Management Page Component
- * Phase 1: Foundation & Core List View
+ * Phase 1: Foundation & Core List View with Pagination
  */
 export default function Posts() {
 	// Debug: Log when component mounts
@@ -13,7 +13,6 @@ export default function Posts() {
 	console.log( 'Posts component mounted' );
 
 	const [ posts, setPosts ] = useState( [] );
-	const [ allPosts, setAllPosts ] = useState( [] ); // Store all posts for client-side filtering
 	const [ loading, setLoading ] = useState( true );
 	const [ error, setError ] = useState( null );
 	const [ filters, setFilters ] = useState( {
@@ -24,67 +23,10 @@ export default function Posts() {
 	} );
 	const [ pagination, setPagination ] = useState( {
 		page: 1,
-		perPage: 50, // Increased to get more posts for better filtering
+		perPage: 10, // Reduced for proper pagination
 		total: 0,
 		totalPages: 0,
 	} );
-
-	/**
-	 * Apply client-side filtering for status and date ranges
-	 */
-	const applyClientSideFilters = ( postsData, currentFilters ) => {
-		let filtered = postsData;
-
-		// Filter by status
-		if ( currentFilters.status !== 'all' ) {
-			filtered = filtered.filter(
-				( post ) => post.status === currentFilters.status
-			);
-		}
-
-		// Filter by date range
-		if ( currentFilters.dateRange !== 'all' ) {
-			const now = new Date();
-			const today = new Date(
-				now.getFullYear(),
-				now.getMonth(),
-				now.getDate()
-			);
-
-			filtered = filtered.filter( ( post ) => {
-				const postDate = new Date( post.date );
-
-				switch ( currentFilters.dateRange ) {
-					case 'today':
-						return postDate >= today;
-					case 'yesterday':
-						const yesterday = new Date( today );
-						yesterday.setDate( yesterday.getDate() - 1 );
-						return postDate >= yesterday && postDate < today;
-					case 'week':
-						const weekAgo = new Date( today );
-						weekAgo.setDate( weekAgo.getDate() - 7 );
-						return postDate >= weekAgo;
-					case 'month':
-						const monthAgo = new Date( today );
-						monthAgo.setMonth( monthAgo.getMonth() - 1 );
-						return postDate >= monthAgo;
-					case 'quarter':
-						const quarterAgo = new Date( today );
-						quarterAgo.setMonth( quarterAgo.getMonth() - 3 );
-						return postDate >= quarterAgo;
-					case 'year':
-						const yearAgo = new Date( today );
-						yearAgo.setFullYear( yearAgo.getFullYear() - 1 );
-						return postDate >= yearAgo;
-					default:
-						return true;
-				}
-			} );
-		}
-
-		return filtered;
-	};
 
 	/**
 	 * Fetch posts from WordPress REST API
@@ -160,19 +102,21 @@ export default function Posts() {
 				} ) )
 			);
 
-			// Store all posts for client-side filtering
-			setAllPosts( postsData );
+			// Store posts for current page
+			setPosts( postsData );
 
-			// Apply client-side filtering
-			const filteredPosts = applyClientSideFilters( postsData, filters );
-			setPosts( filteredPosts );
+			// Get pagination info from API response headers
+			const total = response.headers.get( 'X-WP-Total' );
+			const totalPages = response.headers.get( 'X-WP-TotalPages' );
 
 			setPagination( ( prev ) => ( {
 				...prev,
-				total: filteredPosts.length,
-				totalPages: Math.ceil(
-					filteredPosts.length / pagination.perPage
-				),
+				total: parseInt( total ) || postsData.length,
+				totalPages:
+					parseInt( totalPages ) ||
+					Math.ceil(
+						( parseInt( total ) || postsData.length ) / prev.perPage
+					),
 			} ) );
 		} catch ( err ) {
 			setError( err.message );
@@ -193,11 +137,9 @@ export default function Posts() {
 
 	// Trigger fetch when filters change (for server-side filtering)
 	useEffect( () => {
-		if ( allPosts.length > 0 ) {
-			// eslint-disable-next-line no-console
-			console.log( 'Filters changed, triggering new fetch' );
-			fetchPosts();
-		}
+		// eslint-disable-next-line no-console
+		console.log( 'Filters changed, triggering new fetch' );
+		fetchPosts();
 	}, [ filters.status, filters.author, filters.search, fetchPosts ] );
 
 	/**
@@ -206,20 +148,7 @@ export default function Posts() {
 	const handleFilterChange = ( newFilters ) => {
 		setFilters( newFilters );
 		setPagination( ( prev ) => ( { ...prev, page: 1 } ) ); // Reset to first page
-
-		// Apply client-side filtering to existing posts
-		if ( allPosts.length > 0 ) {
-			const filteredPosts = applyClientSideFilters(
-				allPosts,
-				newFilters
-			);
-			setPosts( filteredPosts );
-			setPagination( ( prev ) => ( {
-				...prev,
-				total: filteredPosts.length,
-				totalPages: Math.ceil( filteredPosts.length / prev.perPage ),
-			} ) );
-		}
+		// API call will be triggered by useEffect dependency
 	};
 
 	/**
