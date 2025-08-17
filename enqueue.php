@@ -49,6 +49,7 @@ add_action(
 			'helixData',
 			array(
 				'restUrl'       => esc_url_raw( rest_url( 'helix/v1/' ) ),
+				'wpRestUrl'     => esc_url_raw( rest_url( 'wp/v2/' ) ),
 				'nonce'         => wp_create_nonce( 'wp_rest' ),
 				'user'          => wp_get_current_user(),
 				'originalRoute' => $original_route,

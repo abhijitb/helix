@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Settings from './pages/Settings/Settings';
+import Posts from './pages/Posts/Posts';
 
 // Main App component for the dashboard page
 export default function App() {
@@ -10,12 +11,7 @@ export default function App() {
 
 // Posts page component
 function PostsApp() {
-	return (
-		<div className="helix-page">
-			<h1>Posts Management</h1>
-			<p>Posts management interface will be implemented here.</p>
-		</div>
-	);
+	return <Posts />;
 }
 
 // Users page component
@@ -46,9 +42,18 @@ document.addEventListener( 'DOMContentLoaded', function () {
 
 	// Posts page
 	const postsRoot = document.getElementById( 'helix-posts-root' );
+	// eslint-disable-next-line no-console
+	console.log( 'Posts root element:', postsRoot );
 	if ( postsRoot ) {
+		// eslint-disable-next-line no-console
+		console.log( 'Creating Posts app root' );
 		const root = createRoot( postsRoot );
 		root.render( <PostsApp /> );
+		// eslint-disable-next-line no-console
+		console.log( 'Posts app rendered' );
+	} else {
+		// eslint-disable-next-line no-console
+		console.log( 'Posts root element not found' );
 	}
 
 	// Users page

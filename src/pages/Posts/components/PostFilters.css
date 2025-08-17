@@ -1,0 +1,133 @@
+/* Post Filters Styles */
+.helix-post-filters {
+	background: white;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	padding: 24px;
+	margin-bottom: 24px;
+}
+
+.helix-post-filters__row {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	margin-bottom: 20px;
+}
+
+.helix-post-filters__search {
+	width: 100%;
+	max-width: 400px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.helix-post-filters__controls {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 16px;
+	align-items: center;
+}
+
+.helix-post-filters__actions {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+/* Filter Group Styles */
+.helix-filter-group {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.helix-filter-label {
+	font-size: 14px;
+	font-weight: 500;
+	color: #1a1a1a;
+	margin: 0;
+}
+
+/* Form Input Styles */
+.helix-input,
+.helix-select {
+	padding: 10px 12px;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	font-size: 14px;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+	width: 100%;
+}
+
+.helix-input:focus,
+.helix-select:focus {
+	outline: none;
+	border-color: #007cba;
+	box-shadow: 0 0 0 1px #007cba;
+}
+
+.helix-input::placeholder {
+	color: #8c8f94;
+}
+
+.helix-select {
+	background-color: white;
+	cursor: pointer;
+	min-width: 140px;
+	height: 42px; /* Match input height */
+}
+
+.helix-select option {
+	padding: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+	.helix-post-filters {
+		padding: 20px;
+	}
+
+	.helix-post-filters__row {
+		gap: 16px;
+	}
+
+	.helix-post-filters__search {
+		max-width: 100%;
+	}
+
+	.helix-post-filters__controls {
+		justify-content: stretch;
+	}
+
+	.helix-post-filters__actions {
+		justify-content: stretch;
+	}
+
+	.helix-select {
+		flex: 1;
+		min-width: auto;
+	}
+}
+
+@media (max-width: 480px) {
+	.helix-post-filters {
+		padding: 16px;
+	}
+
+	.helix-post-filters__controls {
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.helix-post-filters__actions {
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.helix-button {
+		width: 100%;
+		justify-content: center;
+	}
+}
