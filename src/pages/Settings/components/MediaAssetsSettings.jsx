@@ -32,75 +32,79 @@ const MediaAssetsSettings = ( { settings, updateSetting } ) => {
 					min={ 0 }
 				/>
 
-				<div className="helix-settings-subsection">
+				{ /* Image Sizes Section - Header spans full width */ }
+				<div className="helix-settings-subsection-header">
 					<h4>Image Sizes</h4>
-
-					<NumberInput
-						label="Thumbnail Width"
-						description="Maximum width of thumbnail images in pixels."
-						value={ settings.thumbnailSizeW }
-						onChange={ ( value ) =>
-							updateSetting( 'thumbnailSizeW', value )
-						}
-						min={ 0 }
-						max={ 2000 }
-					/>
-
-					<NumberInput
-						label="Thumbnail Height"
-						description="Maximum height of thumbnail images in pixels."
-						value={ settings.thumbnailSizeH }
-						onChange={ ( value ) =>
-							updateSetting( 'thumbnailSizeH', value )
-						}
-						min={ 0 }
-						max={ 2000 }
-					/>
-
-					<NumberInput
-						label="Medium Width"
-						description="Maximum width of medium-sized images in pixels."
-						value={ settings.mediumSizeW }
-						onChange={ ( value ) =>
-							updateSetting( 'mediumSizeW', value )
-						}
-						min={ 0 }
-						max={ 2000 }
-					/>
-
-					<NumberInput
-						label="Medium Height"
-						description="Maximum height of medium-sized images in pixels."
-						value={ settings.mediumSizeH }
-						onChange={ ( value ) =>
-							updateSetting( 'mediumSizeH', value )
-						}
-						min={ 0 }
-						max={ 2000 }
-					/>
-
-					<NumberInput
-						label="Large Width"
-						description="Maximum width of large-sized images in pixels."
-						value={ settings.largeSizeW }
-						onChange={ ( value ) =>
-							updateSetting( 'largeSizeW', value )
-						}
-						min={ 0 }
-						max={ 4000 }
-					/>
-
-					<NumberInput
-						label="Large Height"
-						description="Maximum height of large-sized images in pixels."
-						value={ settings.largeSizeH }
-						onChange={ ( value ) =>
-							updateSetting( 'largeSizeH', value )
-						}
-						min={ 0 }
-						max={ 4000 }
-					/>
 				</div>
+
+				{ /* Thumbnail dimensions - side by side */ }
+				<NumberInput
+					label="Thumbnail Width"
+					description="Maximum width of thumbnail images in pixels."
+					value={ settings.thumbnailSizeW }
+					onChange={ ( value ) =>
+						updateSetting( 'thumbnailSizeW', value )
+					}
+					min={ 0 }
+					max={ 2000 }
+				/>
+
+				<NumberInput
+					label="Thumbnail Height"
+					description="Maximum height of thumbnail images in pixels."
+					value={ settings.thumbnailSizeH }
+					onChange={ ( value ) =>
+						updateSetting( 'thumbnailSizeH', value )
+					}
+					min={ 0 }
+					max={ 2000 }
+				/>
+
+				{ /* Medium dimensions - side by side */ }
+				<NumberInput
+					label="Medium Width"
+					description="Maximum width of medium-sized images in pixels."
+					value={ settings.mediumSizeW }
+					onChange={ ( value ) =>
+						updateSetting( 'mediumSizeW', value )
+					}
+					min={ 0 }
+					max={ 2000 }
+				/>
+
+				<NumberInput
+					label="Medium Height"
+					description="Maximum height of medium-sized images in pixels."
+					value={ settings.mediumSizeH }
+					onChange={ ( value ) =>
+						updateSetting( 'mediumSizeH', value )
+					}
+					min={ 0 }
+					max={ 2000 }
+				/>
+
+				{ /* Large dimensions - side by side */ }
+				<NumberInput
+					label="Large Width"
+					description="Maximum width of large-sized images in pixels."
+					value={ settings.largeSizeW }
+					onChange={ ( value ) =>
+						updateSetting( 'largeSizeW', value )
+					}
+					min={ 0 }
+					max={ 4000 }
+				/>
+
+				<NumberInput
+					label="Large Height"
+					description="Maximum height of large-sized images in pixels."
+					value={ settings.largeSizeH }
+					onChange={ ( value ) =>
+						updateSetting( 'largeSizeH', value )
+					}
+					min={ 0 }
+					max={ 4000 }
+				/>
 
 				<ToggleInput
 					label="Organize my uploads into month- and year-based folders"

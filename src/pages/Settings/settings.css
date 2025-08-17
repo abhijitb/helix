@@ -289,10 +289,42 @@
 
 .helix-settings-grid {
   display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 24px;
+  align-items: start;
+}
+
+/* Ensure form fields take full width within their grid cell */
+.helix-settings-grid .helix-form-field {
+  width: 100%;
+}
+
+/* Handle odd number of fields - make the last field span full width if it's alone */
+.helix-settings-grid .helix-form-field:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+/* Ensure subsections don't interfere with grid layout */
+.helix-settings-subsection .helix-form-field {
+  margin-bottom: 16px;
+}
+
+
+
+/* Ensure consistent spacing between form fields */
+.helix-settings-grid .helix-form-field + .helix-form-field {
+  margin-top: 0;
 }
 
 .helix-settings-subsection {
+  border-top: 1px solid var(--helix-color-3);
+  padding-top: 24px;
+  margin-top: 24px;
+  grid-column: 1 / -1;
+}
+
+.helix-settings-subsection-header {
+  grid-column: 1 / -1;
   border-top: 1px solid var(--helix-color-3);
   padding-top: 24px;
   margin-top: 24px;
@@ -520,6 +552,18 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+  .helix-settings-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .helix-settings-subsection-header {
+    margin-top: 20px;
+    padding-top: 20px;
+  }
+}
+
 @media (max-width: 768px) {
   .helix-settings-page {
     padding: 15px;
@@ -549,6 +593,16 @@
   .helix-settings-section-content,
   .helix-settings-section-header {
     padding: 20px;
+  }
+
+  .helix-settings-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .helix-settings-subsection-header {
+    margin-top: 20px;
+    padding-top: 20px;
   }
 
   .helix-save-buttons {
