@@ -35,33 +35,41 @@ function helix_get_settings_schema() {
  */
 function helix_update_settings_schema() {
 	$settings_config = helix_get_settings_config();
-	$schema          = array(
-		'type'       => 'object',
-		'properties' => array(),
-	);
+	$args            = array();
 
 	foreach ( $settings_config as $category => $category_settings ) {
 		foreach ( $category_settings as $setting_key => $setting_config ) {
-			$schema['properties'][ $setting_key ] = array(
-				'type' => get_rest_api_type( $setting_config['type'] ),
+			$args[ $setting_key ] = array(
+				'description'       => $setting_config['description'],
+				'type'              => get_rest_api_type( $setting_config['type'] ),
+				'sanitize_callback' => 'helix_sanitize_setting_value_for_rest',
+				'validate_callback' => 'helix_validate_setting_value_for_rest',
 			);
 
 			// Add enum validation if applicable.
 			if ( isset( $setting_config['enum'] ) ) {
-				$schema['properties'][ $setting_key ]['enum'] = $setting_config['enum'];
+				$enum_values = array();
+				foreach ( $setting_config['enum'] as $option ) {
+					if ( is_array( $option ) && isset( $option['value'] ) ) {
+						$enum_values[] = $option['value'];
+					} else {
+						$enum_values[] = $option;
+					}
+				}
+				$args[ $setting_key ]['enum'] = $enum_values;
 			}
 
 			// Add minimum/maximum validation for numbers.
 			if ( isset( $setting_config['min'] ) ) {
-				$schema['properties'][ $setting_key ]['minimum'] = $setting_config['min'];
+				$args[ $setting_key ]['minimum'] = $setting_config['min'];
 			}
 			if ( isset( $setting_config['max'] ) ) {
-				$schema['properties'][ $setting_key ]['maximum'] = $setting_config['max'];
+				$args[ $setting_key ]['maximum'] = $setting_config['max'];
 			}
 		}
 	}
 
-	return $schema;
+	return $args;
 }
 
 /**
@@ -86,6 +94,53 @@ function get_rest_api_type( $helix_type ) {
 		default:
 			return 'string';
 	}
+}
+
+/**
+ * Sanitize setting value for REST API requests.
+ *
+ * @since 1.0.0
+ * @param mixed           $value   The value to sanitize.
+ * @param WP_REST_Request $request The request object.
+ * @param string          $param   The parameter name.
+ * @return mixed|WP_Error Sanitized value or WP_Error on failure.
+ */
+function helix_sanitize_setting_value_for_rest( $value, $request, $param ) {
+	return helix_sanitize_setting_value( $param, $value );
+}
+
+/**
+ * Validate setting value for REST API requests.
+ *
+ * @since 1.0.0
+ * @param mixed           $value   The value to validate.
+ * @param WP_REST_Request $request The request object.
+ * @param string          $param   The parameter name.
+ * @return bool|WP_Error True if valid, WP_Error on failure.
+ */
+function helix_validate_setting_value_for_rest( $value, $request, $param ) {
+	// Check if the setting is allowed.
+	if ( ! helix_is_setting_allowed( $param ) ) {
+		return new WP_Error(
+			'helix_setting_not_allowed',
+			sprintf(
+				/* translators: %s: Setting name */
+				__( 'Setting "%s" is not allowed.', 'helix' ),
+				$param
+			),
+			array( 'status' => 403 )
+		);
+	}
+
+	// Use the existing sanitization function which also validates.
+	$sanitized = helix_sanitize_setting_value( $param, $value );
+	
+	// If sanitization returns a WP_Error, validation failed.
+	if ( is_wp_error( $sanitized ) ) {
+		return $sanitized;
+	}
+
+	return true;
 }
 
 /**
