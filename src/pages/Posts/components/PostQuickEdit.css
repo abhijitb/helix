@@ -1,0 +1,145 @@
+/* Quick Edit Modal Overlay */
+.helix-quick-edit-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba( 0, 0, 0, 0.6 );
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 100000;
+}
+
+/* Modal Container */
+.helix-quick-edit-modal {
+	background: #fff;
+	border-radius: 8px;
+	width: 100%;
+	max-width: 600px;
+	max-height: 85vh;
+	display: flex;
+	flex-direction: column;
+	box-shadow: 0 8px 32px rgba( 0, 0, 0, 0.2 );
+}
+
+/* Modal Header */
+.helix-quick-edit-modal__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16px 24px;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.helix-quick-edit-modal__header h2 {
+	margin: 0;
+	font-size: 16px;
+	font-weight: 600;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 85%;
+}
+
+.helix-quick-edit-modal__close {
+	background: none;
+	border: none;
+	font-size: 24px;
+	cursor: pointer;
+	color: #666;
+	padding: 0 4px;
+	line-height: 1;
+}
+
+.helix-quick-edit-modal__close:hover {
+	color: #000;
+}
+
+/* Modal Body */
+.helix-quick-edit-modal__body {
+	padding: 20px 24px;
+	overflow-y: auto;
+	flex: 1;
+}
+
+/* Error Message */
+.helix-quick-edit-error {
+	background: #fef2f2;
+	border: 1px solid #fecaca;
+	color: #b91c1c;
+	padding: 10px 14px;
+	border-radius: 6px;
+	margin-bottom: 16px;
+	font-size: 13px;
+}
+
+/* Form Fields */
+.helix-quick-edit-field {
+	margin-bottom: 18px;
+}
+
+.helix-quick-edit-field label {
+	display: block;
+	font-weight: 600;
+	font-size: 13px;
+	margin-bottom: 6px;
+	color: #1e1e1e;
+}
+
+.helix-quick-edit-field .helix-input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.helix-quick-edit-field .helix-textarea {
+	resize: vertical;
+	min-height: 80px;
+}
+
+/* Categories Checkboxes */
+.helix-quick-edit-categories {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	max-height: 160px;
+	overflow-y: auto;
+	padding: 8px;
+	border: 1px solid #e0e0e0;
+	border-radius: 6px;
+	background: #fafafa;
+}
+
+.helix-quick-edit-category-label {
+	font-size: 13px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	padding: 4px 8px;
+	border-radius: 4px;
+	background: #fff;
+	border: 1px solid #e0e0e0;
+}
+
+.helix-quick-edit-category-label:hover {
+	background: #f0f0f0;
+}
+
+/* Hint Text */
+.helix-quick-edit-hint {
+	font-size: 12px;
+	color: #888;
+	margin: 4px 0 0;
+}
+
+/* Modal Footer */
+.helix-quick-edit-modal__footer {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 10px;
+	padding: 14px 24px;
+	border-top: 1px solid #e0e0e0;
+}

@@ -25,32 +25,32 @@ function UsersApp() {
 }
 
 // Mount components based on container element
-document.addEventListener( 'DOMContentLoaded', function () {
-	// Main Helix app
-	const helixRoot = document.getElementById( 'helix-root' );
-	if ( helixRoot ) {
-		const root = createRoot( helixRoot );
-		root.render( <App /> );
-	}
+// Mount immediately since the script is enqueued with defer and loaded at the end of the body.
 
-	// Settings page
-	const settingsRoot = document.getElementById( 'helix-settings-root' );
-	if ( settingsRoot ) {
-		const root = createRoot( settingsRoot );
-		root.render( <Settings /> );
-	}
+// Main Helix app
+const helixRoot = document.getElementById( 'helix-root' );
+if ( helixRoot ) {
+	const root = createRoot( helixRoot );
+	root.render( <App /> );
+}
 
-	// Posts page
-	const postsRoot = document.getElementById( 'helix-posts-root' );
-	if ( postsRoot ) {
-		const root = createRoot( postsRoot );
-		root.render( <PostsApp /> );
-	}
+// Settings page
+const settingsRoot = document.getElementById( 'helix-settings-root' );
+if ( settingsRoot ) {
+	const root = createRoot( settingsRoot );
+	root.render( <Settings /> );
+}
 
-	// Users page
-	const usersRoot = document.getElementById( 'helix-users-root' );
-	if ( usersRoot ) {
-		const root = createRoot( usersRoot );
-		root.render( <UsersApp /> );
-	}
-} );
+// Posts page
+const postsRoot = document.getElementById( 'helix-posts-root' );
+if ( postsRoot ) {
+	const root = createRoot( postsRoot );
+	root.render( <PostsApp /> );
+}
+
+// Users page
+const usersRoot = document.getElementById( 'helix-users-root' );
+if ( usersRoot ) {
+	const root = createRoot( usersRoot );
+	root.render( <UsersApp /> );
+}

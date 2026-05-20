@@ -12,6 +12,12 @@ export default function PostsList( {
 	onPageChange,
 	onDelete,
 	onStatusChange,
+	sort,
+	onSortChange,
+	selectedPosts,
+	onSelectPost,
+	onSelectAll,
+	onPostUpdate,
 } ) {
 	if ( loading ) {
 		return (
@@ -38,20 +44,70 @@ export default function PostsList( {
 					<thead>
 						<tr>
 							<th className="helix-posts-table__checkbox">
-								<input type="checkbox" />
+								<input
+									type="checkbox"
+									onChange={ ( e ) =>
+										onSelectAll( e.target.checked )
+									}
+									checked={
+										posts.length > 0 &&
+										posts.every( ( p ) =>
+											selectedPosts.has( p.id )
+										)
+									}
+								/>
 							</th>
-							<th className="helix-posts-table__title">Title</th>
-							<th className="helix-posts-table__author">
+							<th className="helix-posts-table__thumbnail">
+								&nbsp;
+							</th>
+							<th
+								className="helix-posts-table__title helix-sortable"
+								onClick={ () => onSortChange( 'title' ) }
+							>
+								Title
+								{ sort.field === 'title' && (
+									<span className="helix-sort-arrow">
+										{ sort.order === 'asc' ? ' ▲' : ' ▼' }
+									</span>
+								) }
+							</th>
+							<th
+								className="helix-posts-table__author helix-sortable"
+								onClick={ () => onSortChange( 'author' ) }
+							>
 								Author
+								{ sort.field === 'author' && (
+									<span className="helix-sort-arrow">
+										{ sort.order === 'asc' ? ' ▲' : ' ▼' }
+									</span>
+								) }
 							</th>
 							<th className="helix-posts-table__categories">
 								Categories
 							</th>
 							<th className="helix-posts-table__tags">Tags</th>
-							<th className="helix-posts-table__status">
+							<th
+								className="helix-posts-table__status helix-sortable"
+								onClick={ () => onSortChange( 'status' ) }
+							>
 								Status
+								{ sort.field === 'status' && (
+									<span className="helix-sort-arrow">
+										{ sort.order === 'asc' ? ' ▲' : ' ▼' }
+									</span>
+								) }
 							</th>
-							<th className="helix-posts-table__date">Date</th>
+							<th
+								className="helix-posts-table__date helix-sortable"
+								onClick={ () => onSortChange( 'date' ) }
+							>
+								Date
+								{ sort.field === 'date' && (
+									<span className="helix-sort-arrow">
+										{ sort.order === 'asc' ? ' ▲' : ' ▼' }
+									</span>
+								) }
+							</th>
 							<th className="helix-posts-table__actions">
 								Actions
 							</th>
@@ -64,6 +120,9 @@ export default function PostsList( {
 								post={ post }
 								onDelete={ onDelete }
 								onStatusChange={ onStatusChange }
+								isSelected={ selectedPosts.has( post.id ) }
+								onSelectPost={ onSelectPost }
+								onPostUpdate={ onPostUpdate }
 							/>
 						) ) }
 					</tbody>

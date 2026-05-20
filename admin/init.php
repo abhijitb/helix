@@ -14,7 +14,16 @@ add_action(
 			'read',
 			'helix',
 			function () {
-				echo '<div id="helix-root"></div>';
+				echo '<div id="helix-root">';
+				if ( function_exists( 'helix_render_skeleton' ) ) {
+					helix_render_skeleton( 'Dashboard' );
+				} else {
+					echo '<div class="helix-loader-container">
+						<div class="helix-loader-spinner"></div>
+						<div class="helix-loader-text">Loading Dashboard...</div>
+					</div>';
+				}
+				echo '</div>';
 			},
 			'dashicons-admin-generic',
 			1

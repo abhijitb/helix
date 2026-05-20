@@ -1,49 +1,5 @@
 <?php
 /**
- * Customizes the WordPress admin menu for Helix.
- * This removes unwanted menu items and keeps only the ones you want
- *
- * @package Helix
- */
-
-add_action(
-	'current_screen',
-	function ( $current_screen ) {
-		if ( ! $current_screen ) {
-			return;
-		}
-
-		// Check if we're on any Helix admin page.
-		$helix_pages = array(
-			'toplevel_page_helix',
-			'toplevel_page_helix-posts',
-			'toplevel_page_helix-users',
-			'toplevel_page_helix-settings',
-		);
-
-		if ( ! in_array( $current_screen->id, $helix_pages, true ) ) {
-			return;
-		}
-
-		// 1) Remove default WordPress admin menus when viewing Helix.
-		remove_menu_page( 'index.php' );                    // Dashboard.
-		remove_menu_page( 'edit.php' );                     // Posts.
-		remove_menu_page( 'upload.php' );                   // Media.
-		remove_menu_page( 'edit.php?post_type=page' );      // Pages.
-		remove_menu_page( 'edit-comments.php' );            // Comments.
-		remove_menu_page( 'themes.php' );                   // Appearance.
-		remove_menu_page( 'plugins.php' );                  // Plugins.
-		remove_menu_page( 'users.php' );                    // Users.
-		remove_menu_page( 'tools.php' );                    // Tools.
-		remove_menu_page( 'options-general.php' );          // Settings.
-
-		// Remove all admin menu separators.
-		remove_all_admin_menu_separators();
-	},
-	10
-);
-
-/**
  * Remove all admin menu separators.
  */
 function remove_all_admin_menu_separators() {
@@ -51,7 +7,7 @@ function remove_all_admin_menu_separators() {
 	if ( is_array( $menu ) ) {
 		foreach ( $menu as $key => $item ) {
 			// Check if menu item is a separator.
-			if ( false !== strpos( $item[4], 'wp-menu-separator' ) ) {
+			if ( isset( $item[4] ) && false !== strpos( $item[4], 'wp-menu-separator' ) ) {
 				unset( $menu[ $key ] );
 			}
 		}
@@ -59,9 +15,8 @@ function remove_all_admin_menu_separators() {
 }
 
 /**
- * Add WordPress Admin menu item conditionally.
+ * Add WordPress Admin menu item conditionally and clean up default admin menu pages.
  */
-
 add_action(
 	'admin_menu',
 	function () {
@@ -120,15 +75,35 @@ add_action(
 				'dashicons-wordpress',       // Icon.
 				6                           // Position (after Settings menu).
 			);
+
+			// Remove default WordPress admin menus.
+			remove_menu_page( 'index.php' );                    // Dashboard.
+			remove_menu_page( 'edit.php' );                     // Posts.
+			remove_menu_page( 'upload.php' );                   // Media.
+			remove_menu_page( 'edit.php?post_type=page' );      // Pages.
+			remove_menu_page( 'edit-comments.php' );            // Comments.
+			remove_menu_page( 'themes.php' );                   // Appearance.
+			remove_menu_page( 'plugins.php' );                  // Plugins.
+			remove_menu_page( 'users.php' );                    // Users.
+			remove_menu_page( 'tools.php' );                    // Tools.
+			remove_menu_page( 'options-general.php' );          // Settings.
+
+			// Remove all admin menu separators.
+			remove_all_admin_menu_separators();
 		}
 	},
 	1000
 );
 
 /**
- * Add custom Helix menu items (only when on Helix page).
+ * Renders a clean loading skeleton to prevent unstyled flash before React mounts.
  */
-/* previous current_screen callbacks combined into the single handler above */
+function helix_render_skeleton( string $title ) {
+	echo '<div class="helix-loader-container">
+		<div class="helix-loader-spinner"></div>
+		<div class="helix-loader-text">Loading ' . esc_html( $title ) . '...</div>
+	</div>';
+}
 
 /**
  * Callback functions for custom menu items.
@@ -155,19 +130,25 @@ function wordpress_admin_callback() {
  * Callback function for Posts menu item.
  */
 function helix_posts_callback() {
-	echo '<div id="helix-posts-root"></div>';
+	echo '<div id="helix-posts-root">';
+	helix_render_skeleton( 'Posts' );
+	echo '</div>';
 }
 
 /**
  * Callback function for Users menu item.
  */
 function helix_users_callback() {
-	echo '<div id="helix-users-root"></div>';
+	echo '<div id="helix-users-root">';
+	helix_render_skeleton( 'Users' );
+	echo '</div>';
 }
 
 /**
  * Callback function for Settings menu item.
  */
 function helix_settings_callback() {
-	echo '<div id="helix-settings-root"></div>';
+	echo '<div id="helix-settings-root">';
+	helix_render_skeleton( 'Settings' );
+	echo '</div>';
 }

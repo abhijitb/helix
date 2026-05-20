@@ -4,6 +4,8 @@
 	border-radius: 8px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 	overflow: hidden;
+	margin-top: 24px;
+	margin-bottom: 40px;
 }
 
 .helix-posts-table-container {

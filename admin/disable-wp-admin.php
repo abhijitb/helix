@@ -100,18 +100,11 @@ add_filter(
 );
 
 /**
- * Redirect the user to the Helix admin page when accessing an admin page.
- *
- * @param WP_Screen $current_screen The current screen object.
+ * Redirect the user to the Helix admin page when accessing a classic admin page.
  */
 add_action(
-	'current_screen',
-	function ( $current_screen ) {
-		// Don't redirect if not in admin.
-		if ( ! is_admin() ) {
-			return;
-		}
-
+	'admin_init',
+	function () {
 		// Don't redirect AJAX requests.
 		if ( wp_doing_ajax() ) {
 			return;
@@ -127,16 +120,28 @@ add_action(
 			return;
 		}
 
-		// Check if we're already on any Helix page or WordPress admin page.
+		global $pagenow;
+		$page_requested = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_URL );
+
+		// If the user clicks "WordPress Admin" to switch back, handle it seamlessly.
+		if ( 'admin.php' === $pagenow && 'wordpress-admin' === $page_requested ) {
+			// Update the option immediately to exit Helix mode.
+			update_option( 'helix_use_default_admin', true );
+			
+			// Seamlessly redirect to the standard WordPress dashboard.
+			wp_safe_redirect( admin_url( 'index.php' ) );
+			exit;
+		}
+
+		// Check if we're already on any Helix page.
 		$helix_pages = array(
-			'toplevel_page_helix',
-			'toplevel_page_helix-posts',
-			'toplevel_page_helix-users',
-			'toplevel_page_helix-settings',
-			'toplevel_page_wordpress-admin',
+			'helix',
+			'helix-posts',
+			'helix-users',
+			'helix-settings',
 		);
 
-		if ( in_array( $current_screen->id, $helix_pages, true ) ) {
+		if ( 'admin.php' === $pagenow && in_array( $page_requested, $helix_pages, true ) ) {
 			return;
 		}
 
@@ -152,7 +157,6 @@ add_action(
 		}
 
 		// Don't redirect critical WordPress admin functions.
-		global $pagenow;
 		$critical_pages = array(
 			'admin-ajax.php',
 			'admin-post.php',
@@ -160,6 +164,8 @@ add_action(
 			'update.php',
 			'update-core.php',
 			'upgrade.php',
+			'post.php',
+			'post-new.php',
 		);
 
 		if ( in_array( $pagenow, $critical_pages, true ) ) {
